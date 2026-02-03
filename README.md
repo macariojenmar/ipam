@@ -1,20 +1,28 @@
 # IPAM Project (Full-Stack Decoupled)
 
-A Dockerized full-stack application with a Laravel backend and a React frontend.
+A Dockerized full-stack application for IP Address Management (IPAM) featuring a Laravel 11 backend and a React (Vite) frontend.
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Docker & Docker Compose installed.
-- (Optional) Node.js & PHP installed locally for IDE support.
+- (Optional) Node.js (v20+) & PHP (8.4) installed locally for IDE support.
 
 ### Run with Docker
 1. **Clone the repository.**
-2. **Start the services:**
+2. **Setup environment:**
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
+3. **Start the services:**
    ```bash
    docker-compose up -d
    ```
-3. **The application will be available at:**
+4. **Seed the database (Initial Roles & Users):**
+   ```bash
+   docker-compose exec backend php artisan migrate:fresh --seed
+   ```
+5. **Access the application:**
    - **Frontend:** [http://localhost:3000](http://localhost:3000)
    - **Backend API:** [http://localhost:8000](http://localhost:8000)
 
@@ -25,6 +33,7 @@ A Dockerized full-stack application with a Laravel backend and a React frontend.
 ### Backend
 - **Framework:** Laravel 11 (Latest Stable)
 - **Runtime:** PHP 8.4 (Latest Stable)
+- **Permissions:** Spatie Laravel Permission
 - **Web Server:** Nginx (Stable Alpine)
 - **Database:** MySQL 8.0
 
@@ -36,19 +45,52 @@ A Dockerized full-stack application with a Laravel backend and a React frontend.
 
 ---
 
-## 📦 Project Structure
-```text
-├── backend/            # Laravel application code
-├── frontend/           # React + Vite application code
-├── docker/             # Docker configuration files
-│   └── nginx/          # Nginx configuration for backend
-├── docker-compose.yml  # Docker orchestration
-└── README.md
-```
+## ✨ Features
+
+### Authentication & Authorization
+- **JWT-based Authentication**: Secure API interaction with token renewal support.
+- **RBAC (Role Based Access Control)**: Using Spatie for `Developer`, `User`, and `Super-Admin` roles.
+- **Approval Workflow**: Registering users start as `pending`. Super-admins must approve them (`active`) before they can log in.
+
+### IP Address Management
+- **IPv4/IPv6 Support**: Add and manage IP addresses with labels and comments.
+- **Permissions**:
+  - **Regular Users**: Can view all IPs, and update only their own IPs (label only).
+  - **Super-Admins**: Full CRUD access to all IP addresses.
+
+### Immutable Audit Logging
+- **Change Tracking**: Every change to an IP address or User is logged.
+- **Session Focus**: Audit logs track changes within a user session and over the entire entity lifetime.
+- **Login/Logout Events**: Automated logging of authentication sessions.
+- **Security**: Logs are append-only and cannot be deleted via the application.
 
 ---
 
-## 🔑 Database Credentials
+## 🔑 Initial User Accounts (Seeded)
+
+| Name | Role | Email | Password |
+| :--- | :--- | :--- | :--- |
+| **James Doe** | Developer | `james@email.com` | `password` |
+| **Jane Doe** | Super-Admin | `jane@email.com` | `password` |
+| John Smith | User | `john@email.com` | `password` |
+
+---
+
+## 🛠 Common Commands
+
+### Backend Commands
+```bash
+# Run migrations and seeds
+docker-compose exec backend php artisan migrate:fresh --seed
+
+# Access Backend Shell
+docker-compose exec backend bash
+
+# View Logs
+docker-compose logs -f backend
+```
+
+### Database Credentials
 | Parameter | Value |
 | :--- | :--- |
 | **Host** | `127.0.0.1` |
@@ -57,30 +99,13 @@ A Dockerized full-stack application with a Laravel backend and a React frontend.
 | **Password** | `root` |
 | **Database** | `ipam` |
 
-> [!NOTE]
-> The database uses `mysql_native_password` for compatibility with clients like SQLyog.
-
 ---
 
-## 🛠 Common Commands
-
-### Backend Commands
-```bash
-# Run migrations
-docker-compose exec backend php artisan migrate
-
-# Generate App Key
-docker-compose exec backend php artisan key:generate
-
-# Access Backend Shell
-docker-compose exec backend bash
-```
-
-### Frontend Commands
-```bash
-# Install local packages (for IDE support)
-cd frontend && npm install
-
-# Restart Frontend Container
-docker-compose restart frontend
+## 📦 Project Structure
+```text
+├── backend/            # PHP 8.4 Laravel 11 Backend
+├── frontend/           # React 18 + Vite TS Frontend
+├── docker/             # Docker configuration files
+├── docker-compose.yml  # Docker orchestration
+└── README.md
 ```
