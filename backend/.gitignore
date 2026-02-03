@@ -21,3 +21,9 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/.composer/
+.cache/
+.phpunit.result.cache
+storage/framework/cache/data/
+storage/framework/views/*.php
+storage/framework/sessions/*

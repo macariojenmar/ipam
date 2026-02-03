@@ -1,0 +1,26 @@
+# Dependencies
+backend/vendor/
+frontend/node_modules/
+
+# Local/IDE Config
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary/Cache Files
+.composer/
+.cache/
+/.phpunit.result.cache
+
+# Environment
+.env
+backend/.env
+frontend/.env.local
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker/mysql/data/
