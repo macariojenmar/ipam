@@ -34,9 +34,23 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
    ```bash
    docker-compose exec backend php artisan migrate:fresh --seed
    ```
-8. **Access the application:**
-   - **Frontend:** [http://localhost:3000](http://localhost:3000)
-   - **Backend API:** [http://localhost:8000](http://localhost:8000)
+### Run Frontend Locally
+1. **Navigate to the frontend directory:**
+   ```bash
+   cd frontend
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+### Access the application
+- **Frontend:** [http://localhost:5173/](http://localhost:5173/)
+- **Backend API:** [http://localhost:8000](http://localhost:8000)
 
 ---
 
