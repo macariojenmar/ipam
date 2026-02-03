@@ -78,7 +78,14 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
 
 ## 🛠 Common Commands
 
-### Backend Commands
+### Backend Setup & JWT
+To generate the required `JWT_SECRET` in your `backend/.env`, run:
+```bash
+docker-compose exec backend php artisan jwt:secret
+```
+---
+
+### Backend Operations
 ```bash
 # Run migrations and seeds
 docker-compose exec backend php artisan migrate:fresh --seed
