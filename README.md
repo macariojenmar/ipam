@@ -18,11 +18,23 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
    ```bash
    docker-compose up -d
    ```
-4. **Seed the database (Initial Roles & Users):**
+4. **Install composer:**
+   ```bash
+   docker-compose exec backend composer install
+   ```
+5. **Generate JWT secret:**
+   ```bash
+   docker-compose exec backend php artisan jwt:secret
+   ```
+6. **Generate App Key:**
+   ```bash
+   docker-compose exec backend php artisan key:generate
+   ```
+7. **Seed the database (Initial Roles & Users):**
    ```bash
    docker-compose exec backend php artisan migrate:fresh --seed
    ```
-5. **Access the application:**
+8. **Access the application:**
    - **Frontend:** [http://localhost:3000](http://localhost:3000)
    - **Backend API:** [http://localhost:8000](http://localhost:8000)
 
@@ -72,18 +84,11 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
 | :--- | :--- | :--- | :--- |
 | **James Doe** | Developer | `james@email.com` | `password` |
 | **Jane Doe** | Super-Admin | `jane@email.com` | `password` |
-| John Smith | User | `john@email.com` | `password` |
+| **John Smith** | User | `john@email.com` | `password` |
 
 ---
 
 ## 🛠 Common Commands
-
-### Backend Setup & JWT
-To generate the required `JWT_SECRET` in your `backend/.env`, run:
-```bash
-docker-compose exec backend php artisan jwt:secret
-```
----
 
 ### Backend Operations
 ```bash
