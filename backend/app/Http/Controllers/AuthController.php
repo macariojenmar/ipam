@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Enums\UserStatus;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -10,15 +11,11 @@ class AuthController extends Controller
     /**
      * Get a JWT via given credentials.
      *
+     * @param  LoginRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
         $credentials = $request->only('email', 'password');
 
         if (! $token = Auth::guard('api')->attempt($credentials)) {
@@ -28,7 +25,7 @@ class AuthController extends Controller
         $user = Auth::guard('api')->user();
 
         // Check user status
-        if ($user->status !== 'active') {
+        if ($user->status !== UserStatus::ACTIVE) {
             Auth::guard('api')->logout();
             return response()->json(['error' => 'Account is pending for approval.'], 403);
         }

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Enums\UserStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +19,7 @@ class UserSeeder extends Seeder
             'name' => 'James Doe',
             'email' => 'james@email.com',
             'password' => Hash::make('password'),
-            'status' => 'active',
+            'status' => UserStatus::ACTIVE,
             'approved_at' => now(),
         ]);
         $james->assignRole('Developer');
@@ -28,7 +29,7 @@ class UserSeeder extends Seeder
             'name' => 'Jane Doe',
             'email' => 'jane@email.com',
             'password' => Hash::make('password'),
-            'status' => 'active',
+            'status' => UserStatus::ACTIVE,
             'approved_at' => now(),
         ]);
         $jane->assignRole('Super-Admin');
@@ -38,7 +39,7 @@ class UserSeeder extends Seeder
             'name' => 'John Smith',
             'email' => 'john@email.com',
             'password' => Hash::make('password'),
-            'status' => 'active',
+            'status' => UserStatus::ACTIVE,
             'approved_by' => $jane->id,
             'approved_at' => now(),
         ]);

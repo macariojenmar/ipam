@@ -10,10 +10,45 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
+use App\Enums\UserStatus;
+use Illuminate\Support\Facades\Hash;
+
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
+
+    /**
+     * Create a new user with default status and role.
+     */
+    public static function register(array $data): self
+    {
+        $user = self::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'status' => UserStatus::PENDING,
+        ]);
+
+        $user->assignRole('User');
+
+        return $user;
+    }
+
+    /**
+     * Update user status and handle approval metadata.
+     */
+    public function updateStatus(string $status, ?int $approvedById = null): bool
+    {
+        $data = ['status' => $status];
+
+        if ($status === UserStatus::ACTIVE->value) {
+            $data['approved_by'] = $approvedById;
+            $data['approved_at'] = now();
+        }
+
+        return $this->update($data);
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -69,6 +104,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status' => \App\Enums\UserStatus::class,
         ];
     }
 }
