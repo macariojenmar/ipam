@@ -87,7 +87,7 @@ const LoginPage = () => {
                 color="text.secondary"
                 textAlign={"center"}
               >
-                Please enter your details to sign in
+                Please enter your details to login
               </Typography>
             </Box>
 
@@ -174,7 +174,7 @@ const LoginPage = () => {
                 {formik.isSubmitting ? (
                   <CircularProgress size={20} />
                 ) : (
-                  "Sign In"
+                  "Login"
                 )}
               </Button>
             </form>
