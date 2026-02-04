@@ -47,7 +47,7 @@ const LoginPage = () => {
           toast.success("Welcome back!");
           navigate("/");
         } else {
-          toast.error("Invalid credentials");
+          toast.error(response?.data?.error ?? "Invalid credentials");
         }
       } catch (error) {
         toast.error("An unexpected error occurred. Please try again.");
@@ -168,7 +168,7 @@ const LoginPage = () => {
                 disabled={formik.isSubmitting}
                 sx={{
                   mt: 3,
-                  py: 1.5
+                  py: 1.5,
                 }}
               >
                 {formik.isSubmitting ? (
