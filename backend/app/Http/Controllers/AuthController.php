@@ -77,7 +77,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60 // 1 hour
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60, // 1 hour
+            'user' => Auth::guard('api')->user()
         ]);
     }
 }
