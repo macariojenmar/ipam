@@ -16,7 +16,7 @@ class UserController extends Controller
         $user = User::register($request->validated());
 
         return response()->json([
-            'message' => 'User successfully registered. Please wait for administrator approval.',
+            'message' => 'Registration successful. Account pending approval.',
             'user' => $user
         ], 210);
     }

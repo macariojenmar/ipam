@@ -5,6 +5,7 @@ import { MuiThemeProvider } from "./theme/MuiThemeProvider";
 import { LoadingFallback } from "./components/LoadingFallback";
 
 const LoginPage = lazy(() => import("./pages/LoginPage.tsx"));
+const SignUpPage = lazy(() => import("./pages/SignUpPage.tsx"));
 const LandingPage = lazy(() => import("./pages/LandingPage.tsx"));
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

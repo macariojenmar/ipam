@@ -13,6 +13,13 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface RegisterData {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -31,6 +38,10 @@ export interface LoginResponse {
 
 export const login = async (credentials: LoginCredentials) => {
   return api.post<LoginResponse>("/auth/login", credentials);
+};
+
+export const register = async (data: RegisterData) => {
+  return api.post("/register", data);
 };
 
 export const logout = async () => {

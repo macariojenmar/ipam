@@ -28,7 +28,7 @@ class RegisterRequest extends ApiFormRequest
         return [
             'name.required' => 'Please provide your full name.',
             'email.required' => 'An email address is required to register.',
-            'email.unique' => 'This email is already registered in our system.',
+            'email.unique' => 'This email is already registered.',
             'password.required' => 'A password is required.',
             'password.min' => 'Your password must be at least 8 characters long.',
             'password.confirmed' => 'The password confirmation does not match.',

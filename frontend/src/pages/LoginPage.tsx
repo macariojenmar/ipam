@@ -10,6 +10,7 @@ import {
   CircularProgress,
   IconButton,
   InputAdornment,
+  Link,
 } from "@mui/material";
 import { ArrowLeft, Earth, Lock, Mail, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -171,11 +172,7 @@ const LoginPage = () => {
                   py: 1.5,
                 }}
               >
-                {formik.isSubmitting ? (
-                  <CircularProgress size={20} />
-                ) : (
-                  "Login"
-                )}
+                {formik.isSubmitting ? <CircularProgress size={20} /> : "Login"}
               </Button>
             </form>
 
@@ -183,6 +180,7 @@ const LoginPage = () => {
               direction="row"
               justifyContent="space-between"
               sx={{ width: "100%" }}
+              alignItems={"center"}
             >
               <Button
                 variant="text"
@@ -191,9 +189,20 @@ const LoginPage = () => {
               >
                 Forgot password?
               </Button>
-              <Button variant="text" size="small" sx={{ px: 2 }}>
-                Create account
-              </Button>
+              <Link
+                onClick={() => navigate("/signup")}
+                sx={{
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                Sign Up
+              </Link>
             </Stack>
           </Stack>
         </Card>

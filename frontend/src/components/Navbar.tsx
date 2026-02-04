@@ -119,7 +119,12 @@ export const Navbar = () => {
               </Fragment>
             ) : (
               <Fragment>
-                <Button variant="outlined" color="inherit">
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  component={RouterLink}
+                  to="/signup"
+                >
                   Sign Up
                 </Button>
                 <Button
