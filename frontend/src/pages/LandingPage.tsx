@@ -1,11 +1,10 @@
-import { Box, Container } from "@mui/material";
-import { Navbar } from "../components/Navbar";
+import { Container } from "@mui/material";
+import { MainLayout } from "../components/MainLayout";
 
 const LandingPage = () => (
-  <Box>
-    <Navbar />
+  <MainLayout>
     <Container sx={{ mt: 4 }}></Container>
-  </Box>
+  </MainLayout>
 );
 
 export default LandingPage;

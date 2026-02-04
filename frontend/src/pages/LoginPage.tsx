@@ -46,7 +46,7 @@ const LoginPage = () => {
         if (response.ok && response.data) {
           setAuthUser(response.data.user, response.data.access_token);
           toast.success("Welcome back!");
-          navigate("/");
+          navigate("/dashboard");
         } else {
           toast.error(response?.data?.error ?? "Invalid credentials");
         }

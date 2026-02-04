@@ -67,5 +67,5 @@ export const COMPONENTS = {
 export const GLOBAL_X_MARGIN = {
   xs: 1,
   md: 10,
-  lg: 30,
+  lg: 20,
 };
