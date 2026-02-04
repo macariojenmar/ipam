@@ -1,14 +1,12 @@
-import { Button, Card } from '@mui/material';
-import { MuiThemeProvider } from './theme/MuiThemeProvider';
+import { MuiThemeProvider } from "./theme/MuiThemeProvider";
+import { Navbar } from "./components/Navbar";
 
 const App = () => {
   return (
     <MuiThemeProvider>
-      <Card variant='outlined'>
-        <Button variant='contained'>Sample Button</Button>
-      </Card>
+      <Navbar />
     </MuiThemeProvider>
   );
-}
+};
 
 export default App;
