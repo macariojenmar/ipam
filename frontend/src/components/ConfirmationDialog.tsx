@@ -36,7 +36,7 @@ const ConfirmationDialog = ({
 }: ConfirmationDialogProps) => {
   return (
     <Dialog maxWidth={"xs"} open={open} onClose={loading ? undefined : onClose}>
-      <DialogTitle fontWeight={800}>{title}</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="body2" maxWidth={320}>
           {message}
@@ -44,7 +44,7 @@ const ConfirmationDialog = ({
         {children}
       </DialogContent>
       <Divider sx={{ mb: 1.5 }} />
-      <DialogActions sx={{ pb: 3, px: 3 }}>
+      <DialogActions>
         <Button onClick={onClose} disabled={loading} variant="outlined">
           {cancelText}
         </Button>

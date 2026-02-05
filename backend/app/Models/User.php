@@ -18,6 +18,8 @@ class User extends Authenticatable implements JWTSubject
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
+    protected $guard_name = 'api';
+
     /**
      * Create a new user with default status and role.
      */

@@ -18,6 +18,13 @@ export const COMPONENTS = {
       },
     },
   },
+  MuiInputLabel: {
+    styleOverrides: {
+      root: {
+        fontSize: "14px",
+      },
+    },
+  },
 
   MuiInputBase: {
     styleOverrides: {
@@ -82,6 +89,22 @@ export const COMPONENTS = {
         borderRadius: 12,
         boxShadow: "none",
       }),
+    },
+  },
+  MuiDialogTitle: {
+    styleOverrides: {
+      root: {
+        fontWeight: 800,
+      },
+    },
+  },
+  MuiDialogActions: {
+    styleOverrides: {
+      root: {
+        paddingBottom: "24px", // pb: 3 (8 * 3 = 24px)
+        paddingLeft: "24px",   // px: 3
+        paddingRight: "24px",
+      },
     },
   },
   MuiMenuItem: {

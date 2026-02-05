@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Admin\UpdateUserStatusRequest;
+use App\Http\Requests\Admin\SaveUserRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -19,7 +22,35 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Registration successful. Account pending approval.',
             'user' => $user
-        ], 210);
+        ], 201);
+    }
+
+    /**
+     * Save/Update user (Admin).
+     */
+    public function save(SaveUserRequest $request)
+    {
+        $validated = $request->validated();
+        $id = $request->input('id');
+
+        $userData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'status' => $validated['status'],
+        ];
+
+        if (!empty($validated['password'])) {
+            $userData['password'] = Hash::make($validated['password']);
+        }
+
+        $user = User::updateOrCreate(['id' => $id], $userData);
+
+        $user->syncRoles([$validated['role']]);
+
+        return response()->json([
+            'message' => $id ? 'User updated successfully.' : 'User created successfully.',
+            'user' => $user->load('roles')
+        ], $id ? 200 : 201);
     }
 
     /**
@@ -29,7 +60,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $user->updateStatus($request->status, auth()->id());
+        $user->updateStatus($request->status, Auth::id());
 
         return response()->json([
             'message' => "User status updated to {$request->status}.",

@@ -14,7 +14,6 @@ import {
   ArrowLeft,
   Earth,
   Mail,
-  Lock,
   CheckCircle,
   UserRound,
 } from "lucide-react";
@@ -26,6 +25,7 @@ import toast from "react-hot-toast";
 import { register } from "../services/api";
 import IconWrapper from "../components/IconWrapper";
 import CenteredLayout from "../components/CenteredLayout";
+import PasswordInput from "../components/PasswordInput";
 
 interface RegisterErrorResponse {
   message?: string;
@@ -206,12 +206,11 @@ const SignUpPage = () => {
                     },
                   }}
                 />
-                <TextField
+                <PasswordInput
                   fullWidth
                   id="password"
                   name="password"
                   label="Password"
-                  type="password"
                   variant="outlined"
                   placeholder="••••••••"
                   value={formik.values.password}
@@ -221,24 +220,12 @@ const SignUpPage = () => {
                     formik.touched.password && Boolean(formik.errors.password)
                   }
                   helperText={formik.touched.password && formik.errors.password}
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <Lock
-                          size={18}
-                          color={theme.palette.text.secondary}
-                          style={{ marginRight: 8 }}
-                        />
-                      ),
-                    },
-                  }}
                 />
-                <TextField
+                <PasswordInput
                   fullWidth
                   id="password_confirmation"
                   name="password_confirmation"
                   label="Confirm Password"
-                  type="password"
                   variant="outlined"
                   placeholder="••••••••"
                   value={formik.values.password_confirmation}
@@ -252,17 +239,6 @@ const SignUpPage = () => {
                     formik.touched.password_confirmation &&
                     formik.errors.password_confirmation
                   }
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <Lock
-                          size={18}
-                          color={theme.palette.text.secondary}
-                          style={{ marginRight: 8 }}
-                        />
-                      ),
-                    },
-                  }}
                 />
               </Stack>
 

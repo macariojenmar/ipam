@@ -18,5 +18,6 @@ Route::post('register', [UserController::class, 'register']);
 // Protected User Management
 Route::prefix('users')->middleware('auth:api')->group(function () {
     Route::get('/', [UserController::class, 'index']);
+    Route::post('save', [UserController::class, 'save']);
     Route::patch('{user}/status', [UserController::class, 'updateStatus']);
 });

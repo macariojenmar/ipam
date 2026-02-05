@@ -2,7 +2,6 @@ import { Fragment, useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Card,
   Chip,
   IconButton,
   MenuItem,
@@ -16,7 +15,13 @@ import {
   type GridColDef,
   type GridPaginationModel,
 } from "@mui/x-data-grid";
-import { getUsers, updateUserStatus, type UserDetail } from "../services/api";
+import {
+  getUsers,
+  updateUserStatus,
+  saveUser,
+  type UserDetail,
+  type UserSaveData,
+} from "../services/api";
 import { toast } from "react-hot-toast";
 import { MainLayout } from "../components/MainLayout";
 import PageLabel from "../components/PageLabel";
@@ -31,6 +36,7 @@ import {
 } from "../enums/statusEnums";
 import { Check, Pencil, Plus, Search, X } from "lucide-react";
 import ConfirmationDialog from "../components/ConfirmationDialog";
+import UserModal from "../components/UserModal";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -56,6 +62,16 @@ const UsersManagementPage = () => {
   });
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  const [userModal, setUserModal] = useState<{
+    open: boolean;
+    user: UserDetail | null;
+    processing: boolean;
+  }>({
+    open: false,
+    user: null,
+    processing: false,
+  });
 
   const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
@@ -123,6 +139,37 @@ const UsersManagementPage = () => {
       toast.error("An error occurred while updating user status");
     }
     setConfirmDialog((prev) => ({ ...prev, processing: false }));
+  };
+
+  const handleSaveUser = async (values: UserSaveData) => {
+    setUserModal((prev) => ({ ...prev, processing: true }));
+    try {
+      const payload: UserSaveData = {
+        ...values,
+        id: userModal.user?.id,
+      };
+      const response = await saveUser(payload);
+
+      if (response.ok) {
+        toast.success(
+          `User ${values.name} ${userModal.user ? "updated" : "created"} successfully`,
+        );
+        fetchUsers(
+          paginationModel.page,
+          paginationModel.pageSize,
+          search,
+          statusFilter,
+        );
+        setUserModal({ open: false, user: null, processing: false });
+      } else {
+        const errorMsg =
+          (response.data as any)?.message || "Failed to save user";
+        toast.error(errorMsg);
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving user");
+    }
+    setUserModal((prev) => ({ ...prev, processing: false }));
   };
 
   useEffect(() => {
@@ -195,7 +242,15 @@ const UsersManagementPage = () => {
       renderCell: ({ row }) => (
         <Stack direction={"row"} alignItems={"center"} mt={1.2}>
           <Tooltip title="Edit">
-            <IconButton>
+            <IconButton
+              onClick={() =>
+                setUserModal({
+                  open: true,
+                  user: row as UserDetail,
+                  processing: false,
+                })
+              }
+            >
               <Pencil size={18} />
             </IconButton>
           </Tooltip>
@@ -244,8 +299,14 @@ const UsersManagementPage = () => {
         title="User Management"
         subTitle="Approve or reject user registration requests."
       >
-        <Button variant="contained" startIcon={<Plus size={22} />}>
-          Add User
+        <Button
+          variant="contained"
+          startIcon={<Plus size={22} />}
+          onClick={() =>
+            setUserModal({ open: true, user: null, processing: false })
+          }
+        >
+          Add New User
         </Button>
       </PageLabel>
 
@@ -312,6 +373,16 @@ const UsersManagementPage = () => {
         message={`Are you sure you want to ${confirmDialog.type} ${confirmDialog.user?.name}'s registration request?`}
         confirmText={confirmDialog.type === APPROVED ? "Approve" : "Reject"}
         color={confirmDialog.type === APPROVED ? "success" : "error"}
+      />
+
+      <UserModal
+        open={userModal.open}
+        user={userModal.user}
+        loading={userModal.processing}
+        onClose={() =>
+          setUserModal({ open: false, user: null, processing: false })
+        }
+        onSave={handleSaveUser}
       />
     </MainLayout>
   );

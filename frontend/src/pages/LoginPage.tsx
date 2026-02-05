@@ -8,12 +8,9 @@ import {
   Typography,
   useTheme,
   CircularProgress,
-  IconButton,
-  InputAdornment,
   Link,
 } from "@mui/material";
-import { ArrowLeft, Earth, Lock, Mail, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, Earth, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { object, string } from "yup";
@@ -22,12 +19,12 @@ import { login } from "../services/api";
 import IconWrapper from "../components/IconWrapper";
 import CenteredLayout from "../components/CenteredLayout";
 import { useAuthStore } from "../store/useAuthStore";
+import PasswordInput from "../components/PasswordInput";
 
 const LoginPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { login: setAuthUser } = useAuthStore();
-  const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -118,12 +115,11 @@ const LoginPage = () => {
                     },
                   }}
                 />
-                <TextField
+                <PasswordInput
                   fullWidth
                   id="password"
                   name="password"
                   label="Password"
-                  type={showPassword ? "text" : "password"}
                   variant="outlined"
                   placeholder="••••••••"
                   value={formik.values.password}
@@ -133,32 +129,6 @@ const LoginPage = () => {
                     formik.touched.password && Boolean(formik.errors.password)
                   }
                   helperText={formik.touched.password && formik.errors.password}
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <Lock
-                          size={18}
-                          color={theme.palette.text.secondary}
-                          style={{ marginRight: 8 }}
-                        />
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
-                            edge="end"
-                            size="small"
-                          >
-                            {showPassword ? (
-                              <EyeOff size={18} />
-                            ) : (
-                              <Eye size={18} />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
                 />
               </Stack>
 

@@ -32,6 +32,16 @@ export interface User {
   avatar?: string;
 }
 
+export interface UserSaveData {
+  id?: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  password?: string;
+  password_confirmation?: string;
+}
+
 export interface LoginResponse {
   user: User;
   access_token: string;
@@ -47,6 +57,10 @@ export const login = async (credentials: LoginCredentials) => {
 
 export const register = async (data: RegisterData) => {
   return api.post("/register", data);
+};
+
+export const saveUser = async (data: UserSaveData) => {
+  return api.post("/users/save", data);
 };
 
 export interface PaginatedResponse<T> {
