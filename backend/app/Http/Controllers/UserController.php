@@ -21,7 +21,6 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Registration successful. Account pending approval.',
-            'user' => $user
         ], 201);
     }
 
@@ -48,8 +47,7 @@ class UserController extends Controller
         $user->syncRoles([$validated['role']]);
 
         return response()->json([
-            'message' => $id ? 'User updated successfully.' : 'User created successfully.',
-            'user' => $user->load('roles')
+            'message' => $id ? 'User updated successfully.' : 'User created successfully.'
         ], $id ? 200 : 201);
     }
 
@@ -64,7 +62,6 @@ class UserController extends Controller
 
         return response()->json([
             'message' => "User status updated to {$request->status}.",
-            'user' => $user
         ]);
     }
 

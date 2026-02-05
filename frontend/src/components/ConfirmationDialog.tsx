@@ -43,7 +43,6 @@ const ConfirmationDialog = ({
         </DialogContentText>
         {children}
       </DialogContent>
-      <Divider sx={{ mb: 1.5 }} />
       <DialogActions>
         <Button onClick={onClose} disabled={loading} variant="outlined">
           {cancelText}

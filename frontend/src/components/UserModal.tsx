@@ -90,7 +90,7 @@ const UserModal = ({
     <Dialog open={open} fullWidth maxWidth="sm">
       <form onSubmit={formik.handleSubmit}>
         <DialogTitle>{isEdit ? "Edit User" : "Add New User"}</DialogTitle>
-        <DialogContent sx={{ pt: 1 }}>
+        <DialogContent>
           <Stack spacing={2} mt={1}>
             <TextField
               placeholder="John Doe"
@@ -100,6 +100,7 @@ const UserModal = ({
               size="small"
               value={formik.values.name}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               error={formik.touched.name && Boolean(formik.errors.name)}
               helperText={formik.touched.name && formik.errors.name}
               slotProps={{
@@ -122,6 +123,7 @@ const UserModal = ({
               size="small"
               value={formik.values.email}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
               slotProps={{
@@ -180,6 +182,7 @@ const UserModal = ({
                 placeholder="••••••••"
                 value={formik.values.password}
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 error={
                   formik.touched.password && Boolean(formik.errors.password)
                 }
@@ -203,6 +206,7 @@ const UserModal = ({
               placeholder="••••••••"
               value={formik.values.password_confirmation}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               error={
                 formik.touched.password_confirmation &&
                 Boolean(formik.errors.password_confirmation)
@@ -214,7 +218,6 @@ const UserModal = ({
             />
           </Stack>
         </DialogContent>
-        <Divider sx={{ mb: 1.5 }} />
         <DialogActions>
           <Button onClick={onClose} variant="outlined">
             Cancel

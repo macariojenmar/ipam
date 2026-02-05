@@ -162,9 +162,7 @@ const UsersManagementPage = () => {
         );
         setUserModal({ open: false, user: null, processing: false });
       } else {
-        const errorMsg =
-          (response.data as any)?.message || "Failed to save user";
-        toast.error(errorMsg);
+        toast.error("Failed to save user");
       }
     } catch (error) {
       toast.error("An error occurred while saving user");
@@ -346,11 +344,7 @@ const UsersManagementPage = () => {
           }}
         />
       </Stack>
-      <Box
-        sx={{
-          height: "62vh",
-        }}
-      >
+      <Box sx={{ height: "62vh" }}>
         <DataGrid
           rows={users}
           columns={columns}

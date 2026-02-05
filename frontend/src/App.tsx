@@ -25,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     initialize();
-  }, [initialize]);
+  }, []);
 
   const routes: RouteConfig[] = [
     { path: PageList.DASHBOARD, element: <DashboardPage /> },

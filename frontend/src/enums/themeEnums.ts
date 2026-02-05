@@ -100,11 +100,10 @@ export const COMPONENTS = {
   },
   MuiDialogActions: {
     styleOverrides: {
-      root: {
-        paddingBottom: "24px", // pb: 3 (8 * 3 = 24px)
-        paddingLeft: "24px",   // px: 3
-        paddingRight: "24px",
-      },
+      root: ({ theme }: { theme: Theme }) => ({
+        padding: 20,
+        borderTop: `1px solid ${theme.palette.divider}`,
+      }),
     },
   },
   MuiMenuItem: {
