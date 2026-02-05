@@ -24,10 +24,18 @@ class AuthController extends Controller
 
         $user = Auth::guard('api')->user();
 
-        // Check user status
+        $statusMessages = [
+            UserStatus::PENDING->value  => 'Your account is awaiting approval.',
+            UserStatus::REJECTED->value => 'Your account was not approved.',
+            UserStatus::ARCHIVED->value => 'This account is no longer active.',
+        ];
+
         if ($user->status !== UserStatus::ACTIVE) {
             Auth::guard('api')->logout();
-            return response()->json(['error' => 'Account is pending for approval.'], 403);
+
+            return response()->json([
+                'error' => $statusMessages[$user->status->value] ?? 'Account access denied.'
+            ], 403);
         }
 
         return $this->respondWithToken($token);

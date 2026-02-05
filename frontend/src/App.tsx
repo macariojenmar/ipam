@@ -33,7 +33,7 @@ const App = () => {
     { path: PageList.IP_MANAGEMENT, element: <LandingPage /> },
     { path: "/login", element: <LoginPage />, guestOnly: true },
     { path: "/signup", element: <SignUpPage />, guestOnly: true },
-    { path: "/", element: <LandingPage />, guestOnly: true },
+    { path: "/", element: <LandingPage /> },
   ];
 
   return (
@@ -55,22 +55,14 @@ const App = () => {
               path={route.path}
               element={
                 route.guestOnly && isAuthenticated ? (
-                  <Navigate to={PageList.DASHBOARD} replace />
+                  <Navigate to={"/"} replace />
                 ) : (
                   route.element
                 )
               }
             />
           ))}
-          <Route
-            path="*"
-            element={
-              <Navigate
-                to={isAuthenticated ? PageList.DASHBOARD : "/"}
-                replace
-              />
-            }
-          />
+          <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </Suspense>
     </MuiThemeProvider>

@@ -20,7 +20,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true });
     try {
       const response = await getCurrentUser();
-      if (response.ok && response.data) {
+      if (response.ok && response?.data?.id) {
         set({ user: response.data, isAuthenticated: true, isLoading: false });
       } else {
         set({ user: null, isAuthenticated: false, isLoading: false });
