@@ -10,6 +10,7 @@ const LoginPage = lazy(() => import("./pages/LoginPage.tsx"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage.tsx"));
 const LandingPage = lazy(() => import("./pages/LandingPage.tsx"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage.tsx"));
+const IpManagementPage = lazy(() => import("./pages/IpManagementPage.tsx"));
 const UsersManagementPage = lazy(
   () => import("./pages/UsersManagementPage.tsx"),
 );
@@ -30,7 +31,7 @@ const App = () => {
   const routes: RouteConfig[] = [
     { path: PageList.DASHBOARD, element: <DashboardPage /> },
     { path: PageList.USERS_MANAGEMENT, element: <UsersManagementPage /> },
-    { path: PageList.IP_MANAGEMENT, element: <LandingPage /> },
+    { path: PageList.IP_MANAGEMENT, element: <IpManagementPage /> },
     { path: "/login", element: <LoginPage />, guestOnly: true },
     { path: "/signup", element: <SignUpPage />, guestOnly: true },
     { path: "/", element: <LandingPage /> },
