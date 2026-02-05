@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'email' => 'james@email.com',
             'password' => Hash::make('password'),
             'status' => UserStatus::ACTIVE,
-            'approved_at' => now(),
+            'reviewed_at' => now(),
         ]);
         $james->assignRole('Developer');
 
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
             'email' => 'jane@email.com',
             'password' => Hash::make('password'),
             'status' => UserStatus::ACTIVE,
-            'approved_at' => now(),
+            'reviewed_at' => now(),
         ]);
         $jane->assignRole('Super-Admin');
 
@@ -40,8 +40,8 @@ class UserSeeder extends Seeder
             'email' => 'john@email.com',
             'password' => Hash::make('password'),
             'status' => UserStatus::ACTIVE,
-            'approved_by' => $jane->id,
-            'approved_at' => now(),
+            'reviewed_by' => $jane->id,
+            'reviewed_at' => now(),
         ]);
         $john->assignRole('User');
     }

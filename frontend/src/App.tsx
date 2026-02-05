@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { MuiThemeProvider } from "./theme/MuiThemeProvider";
@@ -10,6 +10,9 @@ const LoginPage = lazy(() => import("./pages/LoginPage.tsx"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage.tsx"));
 const LandingPage = lazy(() => import("./pages/LandingPage.tsx"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage.tsx"));
+const UsersManagementPage = lazy(
+  () => import("./pages/UsersManagementPage.tsx"),
+);
 
 interface RouteConfig {
   path: string;
@@ -18,10 +21,15 @@ interface RouteConfig {
 }
 
 const App = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, initialize } = useAuthStore();
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   const routes: RouteConfig[] = [
     { path: PageList.DASHBOARD, element: <DashboardPage /> },
+    { path: PageList.USERS_MANAGEMENT, element: <UsersManagementPage /> },
     { path: PageList.IP_MANAGEMENT, element: <LandingPage /> },
     { path: "/login", element: <LoginPage />, guestOnly: true },
     { path: "/signup", element: <SignUpPage />, guestOnly: true },

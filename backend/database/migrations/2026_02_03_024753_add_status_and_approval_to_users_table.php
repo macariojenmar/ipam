@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'active', 'archived'])->default('pending')->after('password');
-            $table->foreignId('approved_by')->nullable()->constrained('users')->after('status');
-            $table->timestamp('approved_at')->nullable()->after('approved_by');
+            $table->enum('status', ['pending', 'active', 'archived', 'rejected'])->default('pending')->after('password');
+            $table->foreignId('reviewed_by')->nullable()->constrained('users')->after('status');
+            $table->timestamp('reviewed_at')->nullable()->after('reviewed_by');
         });
     }
 
@@ -24,8 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['approved_by']);
-            $table->dropColumn(['status', 'approved_by', 'approved_at']);
+            $table->dropForeign(['reviewed_by']);
+            $table->dropColumn(['status', 'reviewed_by', 'reviewed_at']);
         });
     }
 };

@@ -44,7 +44,7 @@ const LoginPage = () => {
       try {
         const response = await login(values);
         if (response.ok && response.data) {
-          setAuthUser(response.data.user, response.data.access_token);
+          setAuthUser(response.data.user);
           toast.success("Welcome back!");
           navigate("/dashboard");
         } else {

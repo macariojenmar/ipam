@@ -13,19 +13,26 @@ export const COMPONENTS = {
     styleOverrides: {
       root: {
         "& .MuiOutlinedInput-root": {
-          borderRadius: "8px",
-          fontSize: "14px",
+          borderRadius: 8,
         },
-        "& .MuiInputBase-input": {
-          fontSize: "14px",
-        },
+      },
+    },
+  },
+
+  MuiInputBase: {
+    styleOverrides: {
+      root: {
+        fontSize: "14px",
+      },
+      input: {
+        fontSize: "14px",
       },
     },
   },
   MuiButton: {
     styleOverrides: {
       root: {
-        borderRadius: 8,
+        borderRadius: 12,
         boxShadow: "none",
         textTransform: "capitalize",
         minWidth: 90,
@@ -43,7 +50,7 @@ export const COMPONENTS = {
     styleOverrides: {
       root: {
         padding: 14,
-        borderRadius: 8,
+        borderRadius: 12,
         boxShadow: "none",
       },
     },
@@ -56,10 +63,32 @@ export const COMPONENTS = {
   MuiMenu: {
     styleOverrides: {
       paper: ({ theme }: { theme: Theme }) => ({
-        borderRadius: 8,
+        borderRadius: 12,
         boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.08)",
         border: `1px solid ${theme.palette.divider}`,
       }),
+    },
+  },
+  MuiDataGrid: {
+    styleOverrides: {
+      root: {
+        borderRadius: 12,
+      },
+    },
+  },
+  MuiDialog: {
+    styleOverrides: {
+      paper: () => ({
+        borderRadius: 12,
+        boxShadow: "none",
+      }),
+    },
+  },
+  MuiMenuItem: {
+    styleOverrides: {
+      root: {
+        fontSize: "14px",
+      },
     },
   },
 };

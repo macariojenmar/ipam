@@ -52,7 +52,8 @@ class AuthController extends Controller
     {
         Auth::guard('api')->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => 'Successfully logged out'])
+            ->withCookie(cookie()->forget(config('jwt.cookie_key_name', 'access_token')));
     }
 
     /**
@@ -74,11 +75,22 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        $ttl = Auth::guard('api')->factory()->getTTL() * 60;
+        $cookieName = config('jwt.cookie_key_name', 'access_token');
+
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60, // 1 hour
-            'user' => Auth::guard('api')->user()
-        ]);
+            'user' => Auth::guard('api')->user(),
+            'expires_in' => $ttl
+        ])->cookie(
+            $cookieName,
+            $token,
+            $ttl / 60, // minutes
+            '/',      // path
+            null,     // domain
+            false,    // secure (set to true in production)
+            true,     // httpOnly
+            false,    // raw
+            'Lax'     // sameSite
+        );
     }
 }

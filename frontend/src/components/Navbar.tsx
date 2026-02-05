@@ -69,7 +69,7 @@ export const Navbar = () => {
         px: GLOBAL_X_MARGIN,
       }}
     >
-      <Toolbar>
+      <Toolbar disableGutters>
         <Stack
           direction={"row"}
           alignItems={"center"}

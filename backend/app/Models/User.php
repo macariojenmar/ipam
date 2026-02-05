@@ -36,18 +36,42 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Update user status and handle approval metadata.
+     * Update user status and handle review metadata.
      */
-    public function updateStatus(string $status, ?int $approvedById = null): bool
+    public function updateStatus(string $status, ?int $reviewerId = null): bool
     {
         $data = ['status' => $status];
 
-        if ($status === UserStatus::ACTIVE->value) {
-            $data['approved_by'] = $approvedById;
-            $data['approved_at'] = now();
+        if ($status === 'approved') {
+            $data['status'] = UserStatus::ACTIVE;
         }
 
+        $data['reviewed_by'] = $reviewerId;
+        $data['reviewed_at'] = now();
+
         return $this->update($data);
+    }
+
+    /**
+     * Get paginated list of users with dynamic filters.
+     */
+    public static function listPaginated(int $perPage = 10, array $filters = [])
+    {
+        $query = self::with('roles')->where('status', '!=', UserStatus::ARCHIVED);
+
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->latest()->paginate($perPage);
     }
 
     /**
@@ -80,8 +104,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'status',
-        'approved_by',
-        'approved_at',
+        'reviewed_by',
+        'reviewed_at',
     ];
 
     /**

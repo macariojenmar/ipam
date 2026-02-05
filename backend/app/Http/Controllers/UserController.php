@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Admin\UpdateUserStatusRequest;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -39,8 +40,11 @@ class UserController extends Controller
     /**
      * List all users.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(User::with('roles')->get());
+        $perPage = $request->query('per_page', 10);
+        $filters = $request->only(['status', 'search']);
+
+        return response()->json(User::listPaginated($perPage, $filters));
     }
 }

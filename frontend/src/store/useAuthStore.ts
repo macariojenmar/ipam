@@ -1,26 +1,32 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import type { User } from "../services/api";
+import { getCurrentUser, type User } from "../services/api";
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
-  login: (user: User, token: string) => void;
+  isLoading: boolean;
+  login: (user: User) => void;
   logout: () => void;
+  initialize: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      login: (user, token) => set({ user, token, isAuthenticated: true }),
-      logout: () => set({ user: null, token: null, isAuthenticated: false }),
-    }),
-    {
-      name: "auth-storage",
-    },
-  ),
-);
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+  login: (user) => set({ user, isAuthenticated: true, isLoading: false }),
+  logout: () => set({ user: null, isAuthenticated: false, isLoading: false }),
+  initialize: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await getCurrentUser();
+      if (response.ok && response.data) {
+        set({ user: response.data, isAuthenticated: true, isLoading: false });
+      } else {
+        set({ user: null, isAuthenticated: false, isLoading: false });
+      }
+    } catch (error) {
+      set({ user: null, isAuthenticated: false, isLoading: false });
+    }
+  },
+}));

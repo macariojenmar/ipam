@@ -1,5 +1,5 @@
 import { Tabs, Tab, Box, useTheme, alpha } from "@mui/material";
-import { LayoutDashboard, Network } from "lucide-react";
+import { LayoutDashboard, Network, Users } from "lucide-react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { PageList } from "../enums/pageEnums";
 import { GLOBAL_X_MARGIN } from "../enums/themeEnums";
@@ -20,6 +20,11 @@ export const NavigationTabs = () => {
       label: "IP Management",
       icon: <Network size={16} />,
       path: PageList.IP_MANAGEMENT,
+    },
+    {
+      label: "Users",
+      icon: <Users size={16} />,
+      path: PageList.USERS_MANAGEMENT,
     },
   ];
 

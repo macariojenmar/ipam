@@ -7,6 +7,7 @@ enum UserStatus: string
     case PENDING = 'pending';
     case ACTIVE = 'active';
     case ARCHIVED = 'archived';
+    case REJECTED = 'rejected';
 
     /**
      * Get all values as an array.
