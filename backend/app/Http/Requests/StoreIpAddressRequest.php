@@ -14,7 +14,11 @@ class StoreIpAddressRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
-            'ip' => 'required|string|unique:ip_addresses,ip',
+            'ip' => [
+                'required',
+                'string',
+                Rule::unique('ip_addresses', 'ip')->whereNull('deleted_at'),
+            ],
             'type' => ['required', Rule::in(['IPv4', 'IPv6'])],
             'label' => 'required|string|max:255',
             'comment' => 'nullable|string',

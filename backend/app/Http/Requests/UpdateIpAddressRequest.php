@@ -19,9 +19,7 @@ class UpdateIpAddressRequest extends ApiFormRequest
             'ip' => [
                 'required',
                 'string',
-                Rule::unique('ip_addresses', 'ip')
-                    ->ignore($id)
-                    ->whereNull('deleted_at'),
+                Rule::unique('ip_addresses', 'ip')->ignore($id)->whereNull('deleted_at'),
             ],
             'type' => ['required', Rule::in(['IPv4', 'IPv6'])],
             'label' => 'required|string|max:255',
