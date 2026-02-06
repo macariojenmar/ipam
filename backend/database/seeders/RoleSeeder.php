@@ -21,6 +21,10 @@ class RoleSeeder extends Seeder
             'can-delete-ip-address',
             'can-view-dashboard',
             'can-approve-users',
+            'can-reject-users',
+            'can-update-user-status',
+            'can-view-users',
+            'can-view-ip-management'
         ];
 
         foreach ($permissions as $permission) {
@@ -39,9 +43,15 @@ class RoleSeeder extends Seeder
             'can-delete-ip-address',
             'can-view-dashboard',
             'can-approve-users',
+            'can-reject-users',
+            'can-view-users',
+            'can-view-ip-management'
         ]);
 
         // User
-        Role::create(['name' => 'User', 'guard_name' => 'api']);
+        $userRole = Role::create(['name' => 'User', 'guard_name' => 'api']);
+        $userRole->givePermissionTo([
+            'can-view-ip-management'
+        ]);
     }
 }

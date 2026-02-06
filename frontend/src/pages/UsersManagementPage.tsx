@@ -41,6 +41,8 @@ import { Check, Pencil, Plus, X } from "lucide-react";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import UserModal from "../components/UserModal";
 import SearchField from "../components/SearchField";
+import { useAuthStore } from "../store/useAuthStore";
+import { CAN_APPROVE_USERS, CAN_REJECT_USERS } from "../enums/permissionEnums";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -57,6 +59,7 @@ const getStatusColor = (status: string) => {
 };
 
 const UsersManagementPage = () => {
+  const { hasPermission } = useAuthStore();
   const [users, setUsers] = useState<UserDetail[]>([]);
   const [loading, setLoading] = useState(true);
   const [rowCount, setRowCount] = useState(0);
@@ -230,6 +233,12 @@ const UsersManagementPage = () => {
       ),
     },
     {
+      field: "role",
+      headerName: "Role",
+      flex: 1,
+      renderCell: ({ row }) => row.role_names[0],
+    },
+    {
       field: "created_at",
       headerName: "Sign up date",
       flex: 1,
@@ -266,36 +275,40 @@ const UsersManagementPage = () => {
           </Tooltip>
           {row.status === PENDING && (
             <Fragment>
-              <Tooltip title="Approve">
-                <IconButton
-                  color="success"
-                  onClick={() =>
-                    setConfirmDialog({
-                      open: true,
-                      type: APPROVED,
-                      user: row as UserDetail,
-                      processing: false,
-                    })
-                  }
-                >
-                  <Check size={18} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Reject">
-                <IconButton
-                  color="error"
-                  onClick={() =>
-                    setConfirmDialog({
-                      open: true,
-                      type: REJECTED,
-                      user: row as UserDetail,
-                      processing: false,
-                    })
-                  }
-                >
-                  <X size={18} />
-                </IconButton>
-              </Tooltip>
+              {hasPermission(CAN_APPROVE_USERS) && (
+                <Tooltip title="Approve">
+                  <IconButton
+                    color="success"
+                    onClick={() =>
+                      setConfirmDialog({
+                        open: true,
+                        type: APPROVED,
+                        user: row as UserDetail,
+                        processing: false,
+                      })
+                    }
+                  >
+                    <Check size={18} />
+                  </IconButton>
+                </Tooltip>
+              )}
+              {hasPermission(CAN_REJECT_USERS) && (
+                <Tooltip title="Reject">
+                  <IconButton
+                    color="error"
+                    onClick={() =>
+                      setConfirmDialog({
+                        open: true,
+                        type: REJECTED,
+                        user: row as UserDetail,
+                        processing: false,
+                      })
+                    }
+                  >
+                    <X size={18} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Fragment>
           )}
         </Stack>

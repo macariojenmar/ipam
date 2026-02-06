@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   MenuItem,
   Stack,
   TextField,
@@ -19,6 +18,9 @@ import { ACTIVE, PENDING, REJECTED, ARCHIVED } from "../enums/statusEnums";
 import PasswordInput from "./PasswordInput";
 import { generateRandomPassword } from "../utils/stringHelper";
 import { Mail, RefreshCw, UserRound } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
+import { DEVELOPER } from "../enums/roleEnums";
+import { CAN_UPDATE_USER_STATUS } from "../enums/permissionEnums";
 
 interface UserModalProps {
   open: boolean;
@@ -37,6 +39,8 @@ const UserModal = ({
 }: UserModalProps) => {
   const isEdit = !!user;
   const theme = useTheme();
+  const { user: currentUser, hasPermission } = useAuthStore();
+  const isDeveloper = currentUser?.role_names?.includes(DEVELOPER);
 
   const formik = useFormik({
     initialValues: {
@@ -149,24 +153,27 @@ const UserModal = ({
                 onChange={formik.handleChange}
               >
                 <MenuItem value="User">User</MenuItem>
-                <MenuItem value="Developer">Developer</MenuItem>
                 <MenuItem value="Super-Admin">Super-Admin</MenuItem>
+                {isDeveloper && (
+                  <MenuItem value="Developer">Developer</MenuItem>
+                )}
               </TextField>
-              <TextField
-                disabled={formik.values.status === PENDING}
-                fullWidth
-                select
-                label="Status"
-                name="status"
-                size="small"
-                value={formik.values.status}
-                onChange={formik.handleChange}
-              >
-                <MenuItem value={PENDING}>Pending</MenuItem>
-                <MenuItem value={ACTIVE}>Active</MenuItem>
-                <MenuItem value={REJECTED}>Rejected</MenuItem>
-                <MenuItem value={ARCHIVED}>Archived</MenuItem>
-              </TextField>
+              {hasPermission(CAN_UPDATE_USER_STATUS) && (
+                <TextField
+                  fullWidth
+                  select
+                  label="Status"
+                  name="status"
+                  size="small"
+                  value={formik.values.status}
+                  onChange={formik.handleChange}
+                >
+                  <MenuItem value={PENDING}>Pending</MenuItem>
+                  <MenuItem value={ACTIVE}>Active</MenuItem>
+                  <MenuItem value={REJECTED}>Rejected</MenuItem>
+                  <MenuItem value={ARCHIVED}>Archived</MenuItem>
+                </TextField>
+              )}
             </Stack>
 
             <Stack direction="row" spacing={1} alignItems="flex-start">

@@ -19,12 +19,21 @@ class UserController extends Controller
         $perPage = $request->query('per_page', 10);
         $filters = $request->only(['status', 'search']);
 
+        $query = User::with('roles:id,name')
+            ->search($filters['search'] ?? null)
+            ->filterByStatus($filters['status'] ?? null);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole('Super-Admin')) {
+            $query->whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'Developer');
+            })->where('status', '!=', 'archived');
+        }
+
         return response()->json(
-            User::with('roles:id,name')
-                ->search($filters['search'] ?? null)
-                ->filterByStatus($filters['status'] ?? null)
-                ->latest()
-                ->paginate($perPage)
+            $query->latest()->paginate($perPage)
         );
     }
 
@@ -41,6 +50,13 @@ class UserController extends Controller
     public function updateStatus(UpdateUserStatusRequest $request, $id)
     {
         $user = User::findOrFail($id);
+
+        if ($request->status === 'archived' && $user->hasRole('Developer')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Users with Developer role cannot be archived.',
+            ], 403);
+        }
 
         $user->updateStatus($request->status, Auth::id());
 

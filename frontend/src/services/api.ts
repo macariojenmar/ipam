@@ -78,13 +78,12 @@ export const register = async (data: RegisterData) => {
 };
 
 export const createUser = async (data: UserSaveData) => {
-  return api.post("/users", data);
+  return api.post("/users/create", data);
 };
 
 export const updateUser = async (id: number, data: UserSaveData) => {
-  return api.put(`/users/${id}`, data);
+  return api.put(`/users/update/${id}`, data);
 };
-
 
 export interface UserDetail extends User {
   status: string;
@@ -112,7 +111,7 @@ export const logout = async () => {
 };
 
 export const updateUserStatus = async (id: number, status: string) => {
-  return api.patch(`/users/${id}/status`, { status });
+  return api.patch(`/users/status/${id}`, { status });
 };
 
 export interface IpAddress {

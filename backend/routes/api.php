@@ -20,18 +20,17 @@ Route::middleware('auth:api')->group(function () {
 
     // User Management
     Route::prefix('users')->group(function () {
-        Route::get('/', [UserController::class, 'index']);
-        Route::post('/', [UserController::class, 'create']);
-        Route::put('{user}', [UserController::class, 'update']);
-        Route::patch('{user}/status', [UserController::class, 'updateStatus']);
-
+        Route::get('/', [UserController::class, 'index'])->middleware('permission:can-view-users');
+        Route::post('/create', [UserController::class, 'create'])->middleware('permission:can-view-users');
+        Route::put('/update/{user}', [UserController::class, 'update'])->middleware('permission:can-view-users');
+        Route::patch('/status/{user}', [UserController::class, 'updateStatus'])->middleware('permission:can-approve-users|can-reject-users');
     });
 
     // IP Management
     Route::prefix('ips')->group(function () {
-        Route::get('/', [IpAddressController::class, 'index']);
-        Route::post('create', [IpAddressController::class, 'create']);
-        Route::put('update/{id}', [IpAddressController::class, 'update']);
+        Route::get('/', [IpAddressController::class, 'index'])->middleware('permission:can-view-ip-management');
+        Route::post('create', [IpAddressController::class, 'create'])->middleware('permission:can-view-ip-management');
+        Route::put('update/{id}', [IpAddressController::class, 'update'])->middleware('permission:can-view-ip-management');
         Route::delete('delete/{id}', [IpAddressController::class, 'delete'])->middleware('permission:can-delete-ip-address');
     });
 });

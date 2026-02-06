@@ -5,6 +5,11 @@ import { MuiThemeProvider } from "./theme/MuiThemeProvider";
 import { LoadingFallback } from "./components/LoadingFallback";
 import { PageList } from "./enums/pageEnums";
 import { useAuthStore } from "./store/useAuthStore";
+import {
+  CAN_VIEW_DASHBOARD,
+  CAN_VIEW_IP_MANAGEMENT,
+  CAN_VIEW_USERS,
+} from "./enums/permissionEnums";
 
 const LoginPage = lazy(() => import("./pages/LoginPage.tsx"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage.tsx"));
@@ -14,28 +19,58 @@ const IpManagementPage = lazy(() => import("./pages/IpManagementPage.tsx"));
 const UsersManagementPage = lazy(
   () => import("./pages/UsersManagementPage.tsx"),
 );
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage.tsx"));
 
 interface RouteConfig {
   path: string;
   element: React.ReactNode;
-  guestOnly?: boolean;
+  requiredPermission?: string;
 }
 
 const App = () => {
-  const { isAuthenticated, initialize } = useAuthStore();
+  const { isAuthenticated, initialize, hasPermission, isLoading } =
+    useAuthStore();
 
   useEffect(() => {
     initialize();
   }, []);
 
   const routes: RouteConfig[] = [
-    { path: PageList.DASHBOARD, element: <DashboardPage /> },
-    { path: PageList.USERS_MANAGEMENT, element: <UsersManagementPage /> },
-    { path: PageList.IP_MANAGEMENT, element: <IpManagementPage /> },
-    { path: "/login", element: <LoginPage />, guestOnly: true },
-    { path: "/signup", element: <SignUpPage />, guestOnly: true },
+    {
+      path: PageList.DASHBOARD,
+      element: <DashboardPage />,
+      requiredPermission: CAN_VIEW_DASHBOARD,
+    },
+    {
+      path: PageList.USERS_MANAGEMENT,
+      element: <UsersManagementPage />,
+      requiredPermission: CAN_VIEW_USERS,
+    },
+    {
+      path: PageList.IP_MANAGEMENT,
+      element: <IpManagementPage />,
+      requiredPermission: CAN_VIEW_IP_MANAGEMENT,
+    },
     { path: "/", element: <LandingPage /> },
+    {
+      path: "/unauthorized",
+      element: (
+        <NotFoundPage
+          title="Unauthorized Access"
+          message="You don't have the necessary permissions to access this page."
+        />
+      ),
+    },
   ];
+
+  const guestRoutes = [
+    { path: "/login", element: <LoginPage /> },
+    { path: "/signup", element: <SignUpPage /> },
+  ];
+
+  if (isLoading) {
+    return <LoadingFallback />;
+  }
 
   return (
     <MuiThemeProvider>
@@ -50,20 +85,28 @@ const App = () => {
       />
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
+          {guestRoutes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={isAuthenticated ? <Navigate to="/" /> : route.element}
+            />
+          ))}
           {routes.map((route) => (
             <Route
               key={route.path}
               path={route.path}
               element={
-                route.guestOnly && isAuthenticated ? (
-                  <Navigate to={"/"} replace />
+                route.requiredPermission &&
+                !hasPermission(route.requiredPermission) ? (
+                  <Navigate to="/" replace />
                 ) : (
                   route.element
                 )
               }
             />
           ))}
-          <Route path="*" element={<div>Not Found</div>} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </MuiThemeProvider>

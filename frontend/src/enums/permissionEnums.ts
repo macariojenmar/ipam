@@ -1,1 +1,7 @@
 export const CAN_DELETE_IP_ADDRESS = "can-delete-ip-address";
+export const CAN_UPDATE_USER_STATUS = "can-update-user-status";
+export const CAN_APPROVE_USERS = "can-approve-users";
+export const CAN_REJECT_USERS = "can-reject-users";
+export const CAN_VIEW_USERS = "can-view-users";
+export const CAN_VIEW_DASHBOARD = "can-view-dashboard";
+export const CAN_VIEW_IP_MANAGEMENT = "can-view-ip-management";
