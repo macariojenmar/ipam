@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import {
   Button,
+  Chip,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -14,7 +15,7 @@ import {
 import { useFormik } from "formik";
 import { object, string } from "yup";
 import { type IpAddress, type IpSaveData } from "../services/api";
-import { Globe, Tag } from "lucide-react";
+import { Globe, Info, Tag } from "lucide-react";
 import { IP_REGEX } from "../enums/validationEnums";
 
 interface IpAddressModalProps {
@@ -23,6 +24,7 @@ interface IpAddressModalProps {
   onSave: (values: IpSaveData) => Promise<void>;
   ipAddress?: IpAddress | null;
   loading?: boolean;
+  canEditIp?: boolean;
 }
 
 const IpAddressModal = ({
@@ -31,6 +33,7 @@ const IpAddressModal = ({
   onSave,
   ipAddress,
   loading,
+  canEditIp = true,
 }: IpAddressModalProps) => {
   const isEdit = !!ipAddress;
   const theme = useTheme();
@@ -77,6 +80,7 @@ const IpAddressModal = ({
               placeholder="e.g. 192.168.1.1"
               name="ip"
               size="small"
+              disabled={isEdit && !canEditIp}
               value={formik.values.ip}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -100,6 +104,7 @@ const IpAddressModal = ({
               label="Type"
               name="type"
               size="small"
+              disabled={isEdit && !canEditIp}
               value={formik.values.type}
               onChange={formik.handleChange}
             >
@@ -144,6 +149,14 @@ const IpAddressModal = ({
               helperText={formik.touched.comment && formik.errors.comment}
             />
           </Stack>
+          {!canEditIp && (
+            <Chip
+              label="Limited edits allowed. Full access is for the creator."
+              size="small"
+              sx={{ width: "fit-content", py: 2, px: 1, mt: 2 }}
+              icon={<Info size={18} style={{ marginRight: 1 }} />}
+            />
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} variant="outlined">

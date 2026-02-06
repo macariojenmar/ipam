@@ -29,6 +29,9 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
+  all_permissions: string[];
+  role_names: string[];
+  roles?: { id: number; name: string }[];
 }
 
 export const getCurrentUser = async () => {
@@ -87,7 +90,7 @@ export interface UserDetail extends User {
   status: string;
   created_at: string;
   updated_at: string;
-  roles: { name: string }[];
+  roles: { id: number; name: string }[];
 }
 
 export const getUsers = async (

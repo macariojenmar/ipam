@@ -26,9 +26,23 @@ class User extends Authenticatable implements JWTSubject
         'reviewed_at',
     ];
 
+    protected $appends = ['all_permissions', 'role_names'];
+
+    public function getAllPermissionsAttribute()
+    {
+        return $this->getAllPermissions()->pluck('name');
+    }
+
+    public function getRoleNamesAttribute()
+    {
+        return $this->getRoleNames();
+    }
+
     protected $hidden = [
         'password',
         'remember_token',
+        'permissions',
+        'roles',
     ];
 
     protected function casts(): array

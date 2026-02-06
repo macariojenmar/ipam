@@ -40,8 +40,20 @@ class IpAddressController extends Controller
     public function update(UpdateIpAddressRequest $request, $id)
     {
         $ip = IpAddress::findOrFail($id);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
-        $ip->update($request->validated());
+        $data = $request->validated();
+
+        $isAdmin = $user->hasRole(['Developer', 'Super-Admin']);
+        $isOwner = $user->id === $ip->user_id;
+
+        if (!$isAdmin && !$isOwner) {
+
+            $data = $request->only(['label', 'comment']);
+        }
+
+        $ip->update($data);
 
         return response()->json([
             'success' => true,

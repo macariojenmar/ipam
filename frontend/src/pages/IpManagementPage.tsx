@@ -29,21 +29,34 @@ import ConfirmationDialog from "../components/ConfirmationDialog";
 import IpAddressModal from "../components/IpAddressModal";
 import { UserAvatar } from "../components/UserAvatar";
 import SearchField from "../components/SearchField";
+import { useAuthStore } from "../store/useAuthStore";
+import { CAN_DELETE_IP_ADDRESS } from "../enums/permissionEnums";
+import { CAN_EDIT_FULL_ROLES } from "../enums/roleEnums";
 
 const IpManagementPage = () => {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [ips, setIps] = useState<IpAddress[]>([]);
   const [loading, setLoading] = useState(true);
+  const { hasPermission, user } = useAuthStore();
+  const isAdmin = user?.role_names?.some((role) =>
+    CAN_EDIT_FULL_ROLES.includes(role),
+  );
+
+  const canEdit = (ipUserId: number) => {
+    return isAdmin || user?.id === ipUserId;
+  };
 
   const [ipModal, setIpModal] = useState<{
     open: boolean;
     ip: IpAddress | null;
     processing: boolean;
+    canEditFull: boolean;
   }>({
     open: false,
     ip: null,
     processing: false,
+    canEditFull: true,
   });
 
   const [deleteDialog, setDeleteDialog] = useState<{
@@ -87,7 +100,12 @@ const IpManagementPage = () => {
           `IP Address ${values.ip} ${ipModal.ip ? "updated" : "created"} successfully`,
         );
         fetchIps(search, typeFilter);
-        setIpModal({ open: false, ip: null, processing: false });
+        setIpModal({
+          open: false,
+          ip: null,
+          processing: false,
+          canEditFull: true,
+        });
       } else {
         const errorData = response.data as ApiErrorResponse;
         const errors = errorData?.errors;
@@ -204,37 +222,43 @@ const IpManagementPage = () => {
       headerName: "Actions",
       flex: 1,
       sortable: false,
-      renderCell: ({ row }) => (
-        <Stack direction={"row"} alignItems={"center"} mt={1.2}>
-          <Tooltip title="Edit">
-            <IconButton
-              onClick={() =>
-                setIpModal({
-                  open: true,
-                  ip: row as IpAddress,
-                  processing: false,
-                })
-              }
-            >
-              <Pencil size={18} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete">
-            <IconButton
-              color="error"
-              onClick={() =>
-                setDeleteDialog({
-                  open: true,
-                  ip: row as IpAddress,
-                  processing: false,
-                })
-              }
-            >
-              <Trash2 size={18} />
-            </IconButton>
-          </Tooltip>
-        </Stack>
-      ),
+      renderCell: ({ row }) => {
+        const editable = canEdit(row.user_id);
+        return (
+          <Stack direction={"row"} alignItems={"center"} mt={1.2}>
+            <Tooltip title="Edit">
+              <IconButton
+                onClick={() =>
+                  setIpModal({
+                    open: true,
+                    ip: row as IpAddress,
+                    processing: false,
+                    canEditFull: editable,
+                  })
+                }
+              >
+                <Pencil size={18} />
+              </IconButton>
+            </Tooltip>
+            {hasPermission(CAN_DELETE_IP_ADDRESS) && editable && (
+              <Tooltip title="Delete">
+                <IconButton
+                  color="error"
+                  onClick={() =>
+                    setDeleteDialog({
+                      open: true,
+                      ip: row as IpAddress,
+                      processing: false,
+                    })
+                  }
+                >
+                  <Trash2 size={18} />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Stack>
+        );
+      },
     },
   ];
 
@@ -248,7 +272,12 @@ const IpManagementPage = () => {
           variant="contained"
           startIcon={<Plus size={22} />}
           onClick={() =>
-            setIpModal({ open: true, ip: null, processing: false })
+            setIpModal({
+              open: true,
+              ip: null,
+              processing: false,
+              canEditFull: true,
+            })
           }
         >
           Add IP Address
@@ -295,7 +324,15 @@ const IpManagementPage = () => {
         open={ipModal.open}
         ipAddress={ipModal.ip}
         loading={ipModal.processing}
-        onClose={() => setIpModal({ open: false, ip: null, processing: false })}
+        canEditIp={ipModal.canEditFull}
+        onClose={() =>
+          setIpModal({
+            open: false,
+            ip: null,
+            processing: false,
+            canEditFull: true,
+          })
+        }
         onSave={handleSaveIp}
       />
 

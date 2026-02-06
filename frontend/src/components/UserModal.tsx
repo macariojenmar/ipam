@@ -42,7 +42,7 @@ const UserModal = ({
     initialValues: {
       name: user?.name || "",
       email: user?.email || "",
-      role: user?.roles?.[0]?.name || "User",
+      role: user?.role_names?.[0] || "User",
       status: user?.status || ACTIVE,
       password: "",
       password_confirmation: "",

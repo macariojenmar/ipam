@@ -8,9 +8,10 @@ interface AuthState {
   login: (user: User) => void;
   logout: () => void;
   initialize: () => Promise<void>;
+  hasPermission: (permission: string) => boolean;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: true,
@@ -28,5 +29,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error) {
       set({ user: null, isAuthenticated: false, isLoading: false });
     }
+  },
+  hasPermission: (permission: string) => {
+    const user = get().user;
+    if (!user || !user.all_permissions) return false;
+    return user.all_permissions.includes(permission);
   },
 }));

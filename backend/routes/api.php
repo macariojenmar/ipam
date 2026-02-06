@@ -32,7 +32,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/', [IpAddressController::class, 'index']);
         Route::post('create', [IpAddressController::class, 'create']);
         Route::put('update/{id}', [IpAddressController::class, 'update']);
-        Route::delete('delete/{id}', [IpAddressController::class, 'delete']);
+        Route::delete('delete/{id}', [IpAddressController::class, 'delete'])->middleware('permission:can-delete-ip-address');
     });
 });
 

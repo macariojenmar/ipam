@@ -18,10 +18,8 @@ class RoleSeeder extends Seeder
 
         // Create Permissions
         $permissions = [
-            'can-add-ip-address',
-            'can-edit-ip-address',
             'can-delete-ip-address',
-            'can-view-audit-logs',
+            'can-view-dashboard',
             'can-approve-users',
         ];
 
@@ -30,26 +28,20 @@ class RoleSeeder extends Seeder
         }
 
         // Create Roles and Assign Permissions
-        
-        // Developer: All permissions
+
+        // Developer
         $devRole = Role::create(['name' => 'Developer', 'guard_name' => 'api']);
         $devRole->givePermissionTo(Permission::all());
 
-        // Super-Admin: All management and audit permissions
+        // Super-Admin
         $adminRole = Role::create(['name' => 'Super-Admin', 'guard_name' => 'api']);
         $adminRole->givePermissionTo([
-            'can-add-ip-address',
-            'can-edit-ip-address',
             'can-delete-ip-address',
-            'can-view-audit-logs',
+            'can-view-dashboard',
             'can-approve-users',
         ]);
 
-        // User: Basic permissions
-        $userRole = Role::create(['name' => 'User', 'guard_name' => 'api']);
-        $userRole->givePermissionTo([
-            'can-add-ip-address',
-            'can-edit-ip-address',
-        ]);
+        // User
+        Role::create(['name' => 'User', 'guard_name' => 'api']);
     }
 }
