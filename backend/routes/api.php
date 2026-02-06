@@ -21,15 +21,17 @@ Route::middleware('auth:api')->group(function () {
     // User Management
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index']);
-        Route::post('save', [UserController::class, 'save']);
+        Route::post('/', [UserController::class, 'create']);
+        Route::put('{user}', [UserController::class, 'update']);
         Route::patch('{user}/status', [UserController::class, 'updateStatus']);
+
     });
 
     // IP Management
     Route::prefix('ips')->group(function () {
         Route::get('/', [IpAddressController::class, 'index']);
         Route::post('create', [IpAddressController::class, 'create']);
-        Route::post('update/{id}', [IpAddressController::class, 'update']);
+        Route::put('update/{id}', [IpAddressController::class, 'update']);
         Route::delete('delete/{id}', [IpAddressController::class, 'delete']);
     });
 });

@@ -19,12 +19,4 @@ class UpdateUserStatusRequest extends ApiFormRequest
             'status' => ['required', new Enum(UserStatus::class)],
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'status.required' => 'Please enter a status.',
-            'status.enum' => 'Please enter a valid status.',
-        ];
-    }
 }

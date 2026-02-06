@@ -18,10 +18,13 @@ import {
 import {
   getUsers,
   updateUserStatus,
-  saveUser,
+  createUser,
+  updateUser,
   type UserDetail,
   type UserSaveData,
+  type ApiErrorResponse,
 } from "../services/api";
+
 import { toast } from "react-hot-toast";
 import { MainLayout } from "../components/MainLayout";
 import PageLabel from "../components/PageLabel";
@@ -145,15 +148,15 @@ const UsersManagementPage = () => {
   const handleSaveUser = async (values: UserSaveData) => {
     setUserModal((prev) => ({ ...prev, processing: true }));
     try {
-      const payload: UserSaveData = {
-        ...values,
-        id: userModal.user?.id,
-      };
-      const response = await saveUser(payload);
+      const response = userModal.user
+        ? await updateUser(userModal.user.id, values)
+        : await createUser(values);
 
       if (response.ok) {
         toast.success(
-          `User ${values.name} ${userModal.user ? "updated" : "created"} successfully`,
+          `User ${values.name} ${
+            userModal.user ? "updated" : "created"
+          } successfully`,
         );
         fetchUsers(
           paginationModel.page,
@@ -163,7 +166,15 @@ const UsersManagementPage = () => {
         );
         setUserModal({ open: false, user: null, processing: false });
       } else {
-        toast.error("Failed to save user");
+        const errorData = response.data as ApiErrorResponse;
+        const errors = errorData?.errors;
+        if (errors) {
+          Object.keys(errors).forEach((key) => {
+            toast.error(errors[key][0]);
+          });
+        } else {
+          toast.error(errorData?.message ?? "Failed to save user");
+        }
       }
     } catch (error) {
       toast.error("An error occurred while saving user");
@@ -330,7 +341,7 @@ const UsersManagementPage = () => {
             minWidth: 120,
           }}
         >
-          <MenuItem value="all"> All </MenuItem>
+          <MenuItem value="all"> All Status</MenuItem>
           <MenuItem value={PENDING}>Pending</MenuItem>
           <MenuItem value={ACTIVE}>Active</MenuItem>
           <MenuItem value={REJECTED}>Rejected</MenuItem>

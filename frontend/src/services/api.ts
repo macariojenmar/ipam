@@ -74,9 +74,14 @@ export const register = async (data: RegisterData) => {
   return api.post("/register", data);
 };
 
-export const saveUser = async (data: UserSaveData) => {
-  return api.post("/users/save", data);
+export const createUser = async (data: UserSaveData) => {
+  return api.post("/users", data);
 };
+
+export const updateUser = async (id: number, data: UserSaveData) => {
+  return api.put(`/users/${id}`, data);
+};
+
 
 export interface UserDetail extends User {
   status: string;
@@ -145,7 +150,7 @@ export const createIpAddress = async (data: IpSaveData) => {
 };
 
 export const updateIpAddress = async (id: number, data: IpSaveData) => {
-  return api.post(`/ips/update/${id}`, data);
+  return api.put(`/ips/update/${id}`, data);
 };
 
 export const deleteIpAddress = async (id: number) => {

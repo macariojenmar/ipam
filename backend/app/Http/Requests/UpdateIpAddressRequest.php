@@ -17,14 +17,14 @@ class UpdateIpAddressRequest extends ApiFormRequest
 
         return [
             'ip' => [
-                'sometimes',
+                'required',
                 'string',
                 Rule::unique('ip_addresses', 'ip')
                     ->ignore($id)
                     ->whereNull('deleted_at'),
             ],
-            'type' => ['sometimes', Rule::in(['IPv4', 'IPv6'])],
-            'label' => 'sometimes|string|max:255',
+            'type' => ['required', Rule::in(['IPv4', 'IPv6'])],
+            'label' => 'required|string|max:255',
             'comment' => 'nullable|string',
         ];
     }
