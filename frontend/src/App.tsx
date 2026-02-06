@@ -99,7 +99,7 @@ const App = () => {
               element={
                 route.requiredPermission &&
                 !hasPermission(route.requiredPermission) ? (
-                  <Navigate to="/" replace />
+                  <Navigate to="/unauthorized" replace />
                 ) : (
                   route.element
                 )

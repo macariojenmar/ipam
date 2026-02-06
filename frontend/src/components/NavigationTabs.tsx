@@ -3,8 +3,15 @@ import { LayoutDashboard, Network, Users } from "lucide-react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { PageList } from "../enums/pageEnums";
 import { GLOBAL_X_MARGIN } from "../enums/themeEnums";
+import { useAuthStore } from "../store/useAuthStore";
+import {
+  CAN_VIEW_DASHBOARD,
+  CAN_VIEW_IP_MANAGEMENT,
+  CAN_VIEW_USERS,
+} from "../enums/permissionEnums";
 
 export const NavigationTabs = () => {
+  const { hasPermission } = useAuthStore();
   const theme = useTheme();
   const location = useLocation();
 
@@ -15,16 +22,19 @@ export const NavigationTabs = () => {
       label: "Dashboard",
       icon: <LayoutDashboard size={16} />,
       path: PageList.DASHBOARD,
+      requiredPermission: CAN_VIEW_DASHBOARD,
     },
     {
       label: "IP Management",
       icon: <Network size={16} />,
       path: PageList.IP_MANAGEMENT,
+      requiredPermission: CAN_VIEW_IP_MANAGEMENT,
     },
     {
       label: "Users",
       icon: <Users size={16} />,
       path: PageList.USERS_MANAGEMENT,
+      requiredPermission: CAN_VIEW_USERS,
     },
   ];
 
@@ -59,23 +69,25 @@ export const NavigationTabs = () => {
           },
         }}
       >
-        {navItems.map((item) => (
-          <Tab
-            key={item.path}
-            component={RouterLink}
-            to={item.path}
-            value={item.path}
-            label={item.label}
-            icon={item.icon}
-            iconPosition="start"
-            sx={{
-              minHeight: 48,
-              textTransform: "none",
-              fontSize: "12px",
-              gap: 1,
-            }}
-          />
-        ))}
+        {navItems
+          .filter((item) => hasPermission(item.requiredPermission))
+          .map((item) => (
+            <Tab
+              key={item.path}
+              component={RouterLink}
+              to={item.path}
+              value={item.path}
+              label={item.label}
+              icon={item.icon}
+              iconPosition="start"
+              sx={{
+                minHeight: 48,
+                textTransform: "none",
+                fontSize: "12px",
+                gap: 1,
+              }}
+            />
+          ))}
       </Tabs>
     </Box>
   );
