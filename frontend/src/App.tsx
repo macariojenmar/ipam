@@ -9,6 +9,7 @@ import {
   CAN_VIEW_DASHBOARD,
   CAN_VIEW_IP_MANAGEMENT,
   CAN_VIEW_USERS,
+  CAN_VIEW_ROLES_AND_PERMISSIONS,
 } from "./enums/permissionEnums";
 
 const LoginPage = lazy(() => import("./pages/LoginPage.tsx"));
@@ -18,6 +19,9 @@ const DashboardPage = lazy(() => import("./pages/DashboardPage.tsx"));
 const IpManagementPage = lazy(() => import("./pages/IpManagementPage.tsx"));
 const UsersManagementPage = lazy(
   () => import("./pages/UsersManagementPage.tsx"),
+);
+const RolesPermissionsPage = lazy(
+  () => import("./pages/RolesPermissionsPage.tsx"),
 );
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage.tsx"));
 
@@ -55,6 +59,11 @@ const App = () => {
       path: PageList.IP_MANAGEMENT,
       element: <IpManagementPage />,
       requiredPermission: CAN_VIEW_IP_MANAGEMENT,
+    },
+    {
+      path: PageList.ROLES_AND_PERMISSIONS,
+      element: <RolesPermissionsPage />,
+      requiredPermission: CAN_VIEW_ROLES_AND_PERMISSIONS,
     },
     { path: "/", element: <LandingPage /> },
     {

@@ -1,5 +1,5 @@
 import { Tabs, Tab, Box, useTheme, alpha } from "@mui/material";
-import { LayoutDashboard, Network, Users } from "lucide-react";
+import { LayoutDashboard, Network, Users, ShieldCheck } from "lucide-react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { PageList } from "../enums/pageEnums";
 import { GLOBAL_X_MARGIN } from "../enums/themeEnums";
@@ -8,6 +8,7 @@ import {
   CAN_VIEW_DASHBOARD,
   CAN_VIEW_IP_MANAGEMENT,
   CAN_VIEW_USERS,
+  CAN_VIEW_ROLES_AND_PERMISSIONS,
 } from "../enums/permissionEnums";
 
 export const NavigationTabs = () => {
@@ -35,6 +36,12 @@ export const NavigationTabs = () => {
       icon: <Users size={16} />,
       path: PageList.USERS_MANAGEMENT,
       requiredPermission: CAN_VIEW_USERS,
+    },
+    {
+      label: "Roles & Permissions",
+      icon: <ShieldCheck size={16} />,
+      path: PageList.ROLES_AND_PERMISSIONS,
+      requiredPermission: CAN_VIEW_ROLES_AND_PERMISSIONS,
     },
   ];
 

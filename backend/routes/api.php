@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IpAddressController;
+use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('create', [IpAddressController::class, 'create'])->middleware('permission:can-view-ip-management');
         Route::put('update/{id}', [IpAddressController::class, 'update'])->middleware('permission:can-view-ip-management');
         Route::delete('delete/{id}', [IpAddressController::class, 'delete'])->middleware('permission:can-delete-ip-address');
+    });
+
+    // Roles and Permissions
+    Route::prefix('permissions')->group(function () {
+        Route::get('/', [RolePermissionController::class, 'index'])->middleware('permission:can-view-roles-and-permissions');
+        Route::post('/create', [RolePermissionController::class, 'create'])->middleware('permission:can-view-roles-and-permissions');
+        Route::put('/update/{id}', [RolePermissionController::class, 'update'])->middleware('permission:can-view-roles-and-permissions');
     });
 });
 

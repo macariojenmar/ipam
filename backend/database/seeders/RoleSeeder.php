@@ -24,7 +24,8 @@ class RoleSeeder extends Seeder
             'can-reject-users',
             'can-update-user-status',
             'can-view-users',
-            'can-view-ip-management'
+            'can-view-ip-management',
+            'can-view-roles-and-permissions'
         ];
 
         foreach ($permissions as $permission) {
