@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use App\Enums\UserStatus;
+use App\Enums\RoleEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -50,7 +51,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'status' => \App\Enums\UserStatus::class,
+            'status' => UserStatus::class,
         ];
     }
 
@@ -95,7 +96,7 @@ class User extends Authenticatable implements JWTSubject
                 'status' => UserStatus::PENDING,
             ]);
 
-            $user->assignRole('User');
+            $user->assignRole(RoleEnum::USER->value);
         });
     }
 

@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Enums\PermissionEnum;
+use App\Enums\RoleEnum;
 
 class RoleSeeder extends Seeder
 {
@@ -17,42 +19,31 @@ class RoleSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create Permissions
-        $permissions = [
-            'can-delete-ip-address',
-            'can-view-dashboard',
-            'can-approve-users',
-            'can-reject-users',
-            'can-update-user-status',
-            'can-view-users',
-            'can-view-ip-management',
-            'can-view-roles-and-permissions'
-        ];
-
-        foreach ($permissions as $permission) {
+        foreach (PermissionEnum::values() as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'api']);
         }
 
         // Create Roles and Assign Permissions
 
         // Developer
-        $devRole = Role::create(['name' => 'Developer', 'guard_name' => 'api']);
+        $devRole = Role::create(['name' => RoleEnum::DEVELOPER->value, 'guard_name' => 'api']);
         $devRole->givePermissionTo(Permission::all());
 
         // Super-Admin
-        $adminRole = Role::create(['name' => 'Super-Admin', 'guard_name' => 'api']);
+        $adminRole = Role::create(['name' => RoleEnum::SUPER_ADMIN->value, 'guard_name' => 'api']);
         $adminRole->givePermissionTo([
-            'can-delete-ip-address',
-            'can-view-dashboard',
-            'can-approve-users',
-            'can-reject-users',
-            'can-view-users',
-            'can-view-ip-management'
+            PermissionEnum::CAN_DELETE_IP_ADDRESS->value,
+            PermissionEnum::CAN_VIEW_DASHBOARD->value,
+            PermissionEnum::CAN_APPROVE_USERS->value,
+            PermissionEnum::CAN_REJECT_USERS->value,
+            PermissionEnum::CAN_VIEW_USERS->value,
+            PermissionEnum::CAN_VIEW_IP_MANAGEMENT->value,
         ]);
 
         // User
-        $userRole = Role::create(['name' => 'User', 'guard_name' => 'api']);
+        $userRole = Role::create(['name' => RoleEnum::USER->value, 'guard_name' => 'api']);
         $userRole->givePermissionTo([
-            'can-view-ip-management'
+            PermissionEnum::CAN_VIEW_IP_MANAGEMENT->value
         ]);
     }
 }

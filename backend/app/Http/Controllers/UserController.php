@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateUserStatusRequest;
 use App\Http\Requests\Admin\SaveUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use Illuminate\Http\Request;
+use App\Enums\RoleEnum;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -26,9 +27,9 @@ class UserController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if ($user->hasRole('Super-Admin')) {
+        if ($user->hasRole(RoleEnum::SUPER_ADMIN->value)) {
             $query->whereDoesntHave('roles', function ($q) {
-                $q->where('name', 'Developer');
+                $q->where('name', RoleEnum::DEVELOPER->value);
             })->where('status', '!=', 'archived');
         }
 
@@ -51,7 +52,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        if ($request->status === 'archived' && $user->hasRole('Developer')) {
+        if ($request->status === 'archived' && $user->hasRole(RoleEnum::DEVELOPER->value)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Users with Developer role cannot be archived.',

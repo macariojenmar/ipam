@@ -7,6 +7,7 @@ use App\Http\Requests\StoreIpAddressRequest;
 use App\Http\Requests\UpdateIpAddressRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\RoleEnum;
 
 class IpAddressController extends Controller
 {
@@ -45,7 +46,7 @@ class IpAddressController extends Controller
 
         $data = $request->validated();
 
-        $isAdmin = $user->hasRole(['Developer', 'Super-Admin']);
+        $isAdmin = $user->hasRole([RoleEnum::DEVELOPER->value, RoleEnum::SUPER_ADMIN->value]);
         $isOwner = $user->id === $ip->user_id;
 
         if (!$isAdmin && !$isOwner) {

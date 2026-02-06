@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Enums\RoleEnum;
 
 class RolePermissionController extends Controller
 {
@@ -19,7 +20,7 @@ class RolePermissionController extends Controller
             })
             ->paginate($perPage);
 
-        $allRoles = ['Developer', 'Super-Admin', 'User'];
+        $allRoles = RoleEnum::values();
 
         $formattedData = $permissions->getCollection()->map(function ($permission) use ($allRoles) {
             $roleStates = [];
@@ -51,13 +52,13 @@ class RolePermissionController extends Controller
         ]);
 
         // Auto-assign to Developer
-        $developerRole = Role::where('name', 'Developer')->first();
+        $developerRole = Role::where('name', RoleEnum::DEVELOPER->value)->first();
         if ($developerRole) {
             $developerRole->givePermissionTo($permission);
         }
 
         // Return the same format as index for the grid
-        $allRoles = ['Developer', 'Super-Admin', 'User'];
+        $allRoles = RoleEnum::values();
         $roleStates = [];
         foreach ($allRoles as $roleName) {
             // Refetch roles for the new permission (it should have Developer now)
