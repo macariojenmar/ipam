@@ -8,12 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @param  LoginRequest  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
@@ -35,27 +29,17 @@ class AuthController extends Controller
 
             return response()->json([
                 'error' => $statusMessages[$user->status->value] ?? 'Account access denied.'
-            ], 403);
+            ]);
         }
 
         return $this->respondWithToken($token);
     }
 
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function me()
     {
         return response()->json(Auth::guard('api')->user());
     }
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout()
     {
         Auth::guard('api')->logout();
@@ -64,23 +48,11 @@ class AuthController extends Controller
             ->withCookie(cookie()->forget(config('jwt.cookie_key_name', 'access_token')));
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function refresh()
     {
         return $this->respondWithToken(Auth::guard('api')->refresh());
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     protected function respondWithToken($token)
     {
         $ttl = Auth::guard('api')->factory()->getTTL() * 60;
