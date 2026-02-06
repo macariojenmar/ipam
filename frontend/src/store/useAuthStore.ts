@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { getCurrentUser, type User } from "../services/api";
+import { PageList } from "../enums/pageEnums";
+import { DEVELOPER, SUPER_ADMIN } from "../enums/roleEnums";
 
 interface AuthState {
   user: User | null;
@@ -9,6 +11,7 @@ interface AuthState {
   logout: () => void;
   initialize: () => Promise<void>;
   hasPermission: (permission: string) => boolean;
+  getDefaultRoute: () => string;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -34,5 +37,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const user = get().user;
     if (!user || !user.all_permissions) return false;
     return user.all_permissions.includes(permission);
+  },
+  getDefaultRoute: () => {
+    const user = get().user;
+    if (!user || !user.role_names || user.role_names.length === 0) {
+      return PageList.IP_MANAGEMENT;
+    }
+
+    // Check if user is Super-Admin or Developer
+    const hasAdminRole = user.role_names.some(
+      (role) => role === SUPER_ADMIN || role === DEVELOPER,
+    );
+
+    return hasAdminRole ? PageList.DASHBOARD : PageList.IP_MANAGEMENT;
   },
 }));

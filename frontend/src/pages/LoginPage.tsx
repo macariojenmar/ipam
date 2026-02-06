@@ -24,7 +24,7 @@ import PasswordInput from "../components/PasswordInput";
 const LoginPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { login: setAuthUser } = useAuthStore();
+  const { login: setAuthUser, getDefaultRoute } = useAuthStore();
 
   const formik = useFormik({
     initialValues: {
@@ -43,7 +43,7 @@ const LoginPage = () => {
         if (response.ok && response.data) {
           setAuthUser(response.data.user);
           toast.success("Welcome back!");
-          navigate("/dashboard");
+          navigate(getDefaultRoute());
         } else {
           toast.error(response?.data?.error ?? "Invalid credentials");
         }

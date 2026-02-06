@@ -1,10 +1,5 @@
-import { Container } from "@mui/material";
 import { MainLayout } from "../components/MainLayout";
 
-const LandingPage = () => (
-  <MainLayout>
-    <Container sx={{ mt: 4 }}></Container>
-  </MainLayout>
-);
+const LandingPage = () => <MainLayout>This is landing page</MainLayout>;
 
 export default LandingPage;

@@ -5,16 +5,17 @@ import type { ReactNode } from "react";
 interface IconWrapperProps {
   children: ReactNode;
   sx?: SxProps<Theme>;
+  size?: number;
 }
 
-const IconWrapper = ({ children, sx }: IconWrapperProps) => {
+const IconWrapper = ({ children, size = 64, sx }: IconWrapperProps) => {
   const theme = useTheme();
 
   return (
     <Box
       sx={{
-        width: 64,
-        height: 64,
+        width: size,
+        height: size,
         borderRadius: "50%",
         backgroundColor: alpha(theme.palette.primary.main, 0.1),
         display: "flex",

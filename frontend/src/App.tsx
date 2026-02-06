@@ -28,8 +28,13 @@ interface RouteConfig {
 }
 
 const App = () => {
-  const { isAuthenticated, initialize, hasPermission, isLoading } =
-    useAuthStore();
+  const {
+    isAuthenticated,
+    initialize,
+    hasPermission,
+    isLoading,
+    getDefaultRoute,
+  } = useAuthStore();
 
   useEffect(() => {
     initialize();
@@ -89,7 +94,13 @@ const App = () => {
             <Route
               key={route.path}
               path={route.path}
-              element={isAuthenticated ? <Navigate to="/" /> : route.element}
+              element={
+                isAuthenticated ? (
+                  <Navigate to={getDefaultRoute()} />
+                ) : (
+                  route.element
+                )
+              }
             />
           ))}
           {routes.map((route) => (
@@ -97,9 +108,14 @@ const App = () => {
               key={route.path}
               path={route.path}
               element={
-                route.requiredPermission &&
-                !hasPermission(route.requiredPermission) ? (
-                  <Navigate to="/unauthorized" replace />
+                route.requiredPermission ? (
+                  !isAuthenticated ? (
+                    <Navigate to="/login" replace />
+                  ) : !hasPermission(route.requiredPermission) ? (
+                    <Navigate to="/unauthorized" replace />
+                  ) : (
+                    route.element
+                  )
                 ) : (
                   route.element
                 )

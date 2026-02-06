@@ -4,4 +4,4 @@ export const PageList = {
   USERS_MANAGEMENT: "/users-management",
 } as const;
 
-export type PageList = typeof PageList[keyof typeof PageList];
+export type PageList = (typeof PageList)[keyof typeof PageList];
