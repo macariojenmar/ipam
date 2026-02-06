@@ -13,10 +13,12 @@ class IpAddressController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->query('per_page', 10);
-        $filters = $request->only(['search']);
+        $filters = $request->only(['search', 'type']);
 
         return response()->json(
-            IpAddress::search($filters['search'] ?? null)
+            IpAddress::with('user:id,name')
+                ->search($filters['search'] ?? null)
+                ->filterByType($filters['type'] ?? null)
                 ->latest()
                 ->paginate($perPage)
         );
@@ -55,7 +57,7 @@ class IpAddressController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'IP address deleted successfully (soft delete).'
+            'message' => 'IP address deleted successfully.'
         ]);
     }
 }

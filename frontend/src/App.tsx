@@ -44,7 +44,7 @@ const App = () => {
         reverseOrder={false}
         toastOptions={{
           style: {
-            fontSize: "14px",
+            fontSize: "12px",
           },
         }}
       />

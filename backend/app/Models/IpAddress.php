@@ -25,9 +25,17 @@ class IpAddress extends Model
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('ip', 'like', "%{$search}%")
-                    ->orWhere('label', 'like', "%{$search}%")
-                    ->orWhere('comment', 'like', "%{$search}%");
+                    ->orWhere('label', 'like', "%{$search}%");
             });
+        }
+
+        return $query;
+    }
+
+    public function scopeFilterByType($query, ?string $type)
+    {
+        if ($type && $type !== 'all') {
+            $query->where('type', $type);
         }
 
         return $query;

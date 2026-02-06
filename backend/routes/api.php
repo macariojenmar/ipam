@@ -29,8 +29,8 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('ips')->group(function () {
         Route::get('/', [IpAddressController::class, 'index']);
         Route::post('create', [IpAddressController::class, 'create']);
-        Route::post('update/{ip}', [IpAddressController::class, 'update']);
-        Route::delete('delete/{ip}', [IpAddressController::class, 'delete']);
+        Route::post('update/{id}', [IpAddressController::class, 'update']);
+        Route::delete('delete/{id}', [IpAddressController::class, 'delete']);
     });
 });
 

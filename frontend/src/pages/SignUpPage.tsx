@@ -22,15 +22,11 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { object, string, ref } from "yup";
 import toast from "react-hot-toast";
-import { register } from "../services/api";
+import { register, type ApiErrorResponse } from "../services/api";
 import IconWrapper from "../components/IconWrapper";
 import CenteredLayout from "../components/CenteredLayout";
 import PasswordInput from "../components/PasswordInput";
 
-interface RegisterErrorResponse {
-  message?: string;
-  errors?: Record<string, string[]>;
-}
 
 const SignUpPage = () => {
   const theme = useTheme();
@@ -63,7 +59,7 @@ const SignUpPage = () => {
           setIsSuccess(true);
           toast.success("Registration successful!");
         } else {
-          const errorData = response.data as RegisterErrorResponse;
+          const errorData = response.data as ApiErrorResponse;
           const errors = errorData?.errors;
           if (errors) {
             Object.keys(errors).forEach((key) => {

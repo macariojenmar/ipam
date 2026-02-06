@@ -34,9 +34,10 @@ import {
   ARCHIVED,
   APPROVED,
 } from "../enums/statusEnums";
-import { Check, Pencil, Plus, Search, X } from "lucide-react";
+import { Check, Pencil, Plus, X } from "lucide-react";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import UserModal from "../components/UserModal";
+import SearchField from "../components/SearchField";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -315,6 +316,11 @@ const UsersManagementPage = () => {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
+        <SearchField
+          placeholder="Search for name or email"
+          value={search}
+          onChange={setSearch}
+        />
         <TextField
           size="small"
           select
@@ -329,20 +335,6 @@ const UsersManagementPage = () => {
           <MenuItem value={ACTIVE}>Active</MenuItem>
           <MenuItem value={REJECTED}>Rejected</MenuItem>
         </TextField>
-
-        <TextField
-          size="small"
-          variant="outlined"
-          placeholder="Search for name or email"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          sx={{ minWidth: 300 }}
-          slotProps={{
-            input: {
-              startAdornment: <Search size={18} style={{ marginRight: 8 }} />,
-            },
-          }}
-        />
       </Stack>
       <Box sx={{ height: "62vh" }}>
         <DataGrid

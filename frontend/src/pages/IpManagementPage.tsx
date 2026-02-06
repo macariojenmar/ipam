@@ -4,7 +4,9 @@ import {
   Button,
   Chip,
   IconButton,
+  MenuItem,
   Stack,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -15,6 +17,8 @@ import {
   getIps,
   type IpAddress,
   type IpSaveData,
+  type ApiErrorResponse,
+  updateIpAddress,
 } from "../services/api";
 import { toast } from "react-hot-toast";
 import { MainLayout } from "../components/MainLayout";
@@ -23,8 +27,12 @@ import RelativeTimeTooltip from "../components/RelativeTimeTooltip";
 import { Pencil, Plus, Trash2, Globe } from "lucide-react";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import IpAddressModal from "../components/IpAddressModal";
+import { UserAvatar } from "../components/UserAvatar";
+import SearchField from "../components/SearchField";
 
 const IpManagementPage = () => {
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [ips, setIps] = useState<IpAddress[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,10 +56,10 @@ const IpManagementPage = () => {
     processing: false,
   });
 
-  const fetchIps = async () => {
+  const fetchIps = async (searchTerm: string, type: string) => {
     setLoading(true);
     try {
-      const response = await getIps();
+      const response = await getIps(1, 10, searchTerm, type);
       if (response.ok && response.data) {
         setIps(response.data.data);
       } else {
@@ -70,16 +78,26 @@ const IpManagementPage = () => {
         ...values,
         id: ipModal.ip?.id,
       };
-      const response = await createIpAddress(payload);
+      const response = ipModal.ip?.id
+        ? await updateIpAddress(ipModal.ip.id, payload)
+        : await createIpAddress(payload);
 
       if (response.ok) {
         toast.success(
           `IP Address ${values.ip} ${ipModal.ip ? "updated" : "created"} successfully`,
         );
-        fetchIps();
+        fetchIps(search, typeFilter);
         setIpModal({ open: false, ip: null, processing: false });
       } else {
-        toast.error("Failed to save IP address");
+        const errorData = response.data as ApiErrorResponse;
+        const errors = errorData?.errors;
+        if (errors) {
+          Object.keys(errors).forEach((key) => {
+            toast.error(errors[key][0]);
+          });
+        } else {
+          toast.error(errorData?.message ?? "Failed to save IP address");
+        }
       }
     } catch (error) {
       toast.error("An error occurred while saving IP address");
@@ -95,7 +113,7 @@ const IpManagementPage = () => {
       const response = await deleteIpAddress(deleteDialog.ip.id);
       if (response.ok) {
         toast.success("IP Address deleted successfully");
-        fetchIps();
+        fetchIps(search, typeFilter);
         setDeleteDialog({ open: false, ip: null, processing: false });
       } else {
         toast.error("Failed to delete IP address");
@@ -107,14 +125,18 @@ const IpManagementPage = () => {
   };
 
   useEffect(() => {
-    fetchIps();
-  }, []);
+    const timer = setTimeout(() => {
+      fetchIps(search, typeFilter);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search, typeFilter]);
 
   const columns: GridColDef[] = [
     {
       field: "ip",
       headerName: "IP Address",
-      flex: 1.5,
+      flex: 1,
       renderCell: ({ row }) => (
         <Stack direction={"row"} gap={1} alignItems={"center"} mt={1.2}>
           <Box
@@ -140,14 +162,12 @@ const IpManagementPage = () => {
     {
       field: "type",
       headerName: "Type",
-      width: 100,
+      flex: 1,
       renderCell: ({ row }) => (
         <Chip
           label={row.type}
           size="small"
-          variant="outlined"
-          color="primary"
-          sx={{ fontWeight: 600, mt: 1.2 }}
+          sx={{ fontWeight: 600, py: 1.5, px: 1 }}
         />
       ),
     },
@@ -155,16 +175,25 @@ const IpManagementPage = () => {
     {
       field: "comment",
       headerName: "Comment",
-      flex: 1.5,
+      flex: 1,
+      renderCell: ({ row }) => row.comment || "None",
+    },
+    {
+      field: "created_by",
+      headerName: "Created by",
+      flex: 1,
       renderCell: ({ row }) => (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1.2 }}>
-          {row.comment || "-"}
-        </Typography>
+        <Stack direction={"row"} gap={1} alignItems={"center"} mt={1.6}>
+          <UserAvatar size={24} name={row.user.name} />
+          <Typography variant="body2" fontWeight={600}>
+            {row.user.name}
+          </Typography>
+        </Stack>
       ),
     },
     {
       field: "created_at",
-      headerName: "Created",
+      headerName: "Date created",
       flex: 1,
       renderCell: ({ row }) => (
         <RelativeTimeTooltip passedDate={row.created_at} />
@@ -173,7 +202,7 @@ const IpManagementPage = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 120,
+      flex: 1,
       sortable: false,
       renderCell: ({ row }) => (
         <Stack direction={"row"} alignItems={"center"} mt={1.2}>
@@ -226,7 +255,33 @@ const IpManagementPage = () => {
         </Button>
       </PageLabel>
 
-      <Box sx={{ height: "70vh", mt: 2 }}>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        mb={2}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+      >
+        <SearchField
+          placeholder="Search for IP or label"
+          value={search}
+          onChange={setSearch}
+        />
+        <TextField
+          size="small"
+          select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          sx={{
+            minWidth: 120,
+          }}
+        >
+          <MenuItem value="all"> All Types </MenuItem>
+          <MenuItem value="IPv4">IPv4</MenuItem>
+          <MenuItem value="IPv6">IPv6</MenuItem>
+        </TextField>
+      </Stack>
+      <Box sx={{ height: "62vh" }}>
         <DataGrid
           rows={ips}
           columns={columns}

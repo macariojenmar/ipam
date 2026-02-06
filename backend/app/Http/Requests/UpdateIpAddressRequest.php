@@ -13,10 +13,16 @@ class UpdateIpAddressRequest extends ApiFormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('ip_address');
+        $id = $this->route('id');
 
         return [
-            'ip' => ['sometimes', 'string', Rule::unique('ip_addresses', 'ip')->ignore($id)],
+            'ip' => [
+                'sometimes',
+                'string',
+                Rule::unique('ip_addresses', 'ip')
+                    ->ignore($id)
+                    ->whereNull('deleted_at'),
+            ],
             'type' => ['sometimes', Rule::in(['IPv4', 'IPv6'])],
             'label' => 'sometimes|string|max:255',
             'comment' => 'nullable|string',

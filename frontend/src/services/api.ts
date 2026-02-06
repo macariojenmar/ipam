@@ -19,8 +19,13 @@ export interface PaginatedResponse<T> {
   to: number;
 }
 
+export interface ApiErrorResponse {
+  message?: string;
+  errors?: Record<string, string[]>;
+}
+
 export interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
   avatar?: string;
@@ -52,7 +57,7 @@ export interface RegisterData {
 }
 
 export interface UserSaveData {
-  id?: string;
+  id?: number;
   name: string;
   email: string;
   role: string;
@@ -98,33 +103,40 @@ export const logout = async () => {
   return api.post("/auth/logout");
 };
 
-export const updateUserStatus = async (id: string | number, status: string) => {
+export const updateUserStatus = async (id: number, status: string) => {
   return api.patch(`/users/${id}/status`, { status });
 };
 
 export interface IpAddress {
-  id: string;
+  id: number;
   ip: string;
   type: "IPv4" | "IPv6";
   label: string;
   comment?: string;
-  user_id: string;
+  user_id: number;
   created_at: string;
   updated_at: string;
 }
 
 export interface IpSaveData {
-  id?: string;
+  id?: number;
   ip: string;
   type: string;
   label: string;
   comment?: string;
 }
 
-export const getIps = async (page: number = 1, perPage: number = 10) => {
+export const getIps = async (
+  page: number = 1,
+  perPage: number = 10,
+  search?: string,
+  type?: string,
+) => {
   return api.get<PaginatedResponse<IpAddress>>("/ips", {
     page,
     per_page: perPage,
+    search,
+    type: type === "all" ? "" : type,
   });
 };
 
@@ -132,14 +144,11 @@ export const createIpAddress = async (data: IpSaveData) => {
   return api.post("/ips/create", data);
 };
 
-export const updateIpAddress = async (
-  id: string | number,
-  data: IpSaveData,
-) => {
+export const updateIpAddress = async (id: number, data: IpSaveData) => {
   return api.post(`/ips/update/${id}`, data);
 };
 
-export const deleteIpAddress = async (id: string | number) => {
+export const deleteIpAddress = async (id: number) => {
   return api.delete(`/ips/delete/${id}`);
 };
 
