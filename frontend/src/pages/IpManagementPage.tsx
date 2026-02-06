@@ -198,7 +198,7 @@ const IpManagementPage = () => {
     },
     {
       field: "created_by",
-      headerName: "Created by",
+      headerName: "Author",
       flex: 1,
       renderCell: ({ row }) => (
         <Stack direction={"row"} gap={1} alignItems={"center"} mt={1.6}>
@@ -292,7 +292,7 @@ const IpManagementPage = () => {
         justifyContent={"space-between"}
       >
         <SearchField
-          placeholder="Search for IP or label"
+          placeholder="Search for IP, label, or author"
           value={search}
           onChange={setSearch}
         />
