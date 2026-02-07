@@ -1,6 +1,24 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, LinearProgress, Typography, useTheme } from "@mui/material";
+import { Hourglass } from "lucide-react";
+import { useMemo } from "react";
+import IconWrapper from "./IconWrapper";
+
+const LOADING_PHRASES = [
+  "Getting page ready…",
+  "Warming things up…",
+  "Fetching the good stuff…",
+  "Almost there…",
+  "Loading awesomeness…",
+  "Hang tight, preparing content…",
+  "Just a moment…",
+];
 
 export const LoadingFallback = () => {
+  const theme = useTheme();
+  const phrase = useMemo(() => {
+    return LOADING_PHRASES[Math.floor(Math.random() * LOADING_PHRASES.length)];
+  }, []);
+
   return (
     <Box
       sx={{
@@ -12,9 +30,12 @@ export const LoadingFallback = () => {
         gap: 2,
       }}
     >
-      <CircularProgress size={24} thickness={4}/>
-      <Typography variant="body2" color="text.secondary" textAlign={"center"}>
-        Getting page ready
+      <IconWrapper size={60}>
+        <Hourglass size={24} color={theme.palette.primary.main} />
+      </IconWrapper>
+      <LinearProgress sx={{ width: 150 }} />
+      <Typography variant="body2" color="text.secondary" textAlign="center">
+        {phrase}
       </Typography>
     </Box>
   );

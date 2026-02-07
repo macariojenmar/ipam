@@ -83,7 +83,11 @@ const App = () => {
   ];
 
   if (isLoading) {
-    return <LoadingFallback />;
+    return (
+      <MuiThemeProvider>
+        <LoadingFallback />
+      </MuiThemeProvider>
+    );
   }
 
   return (
