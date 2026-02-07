@@ -38,7 +38,7 @@ const RolesPermissionsPage = () => {
     page: 0,
     pageSize: 10,
   });
-  const [total, setTotal] = useState(0);
+  const [totalRows, setTotalRows] = useState(0);
   const roles = [DEVELOPER, SUPER_ADMIN, USER];
 
   const fetchPermissions = async () => {
@@ -50,7 +50,7 @@ const RolesPermissionsPage = () => {
         search,
       );
       setPermissions(data.data);
-      setTotal(data.total);
+      setTotalRows(data.total);
     } catch (error) {
       toast.error("Failed to load permissions");
     }
@@ -102,8 +102,6 @@ const RolesPermissionsPage = () => {
     setCreating(true);
     try {
       const newPermission = await createPermission(name.trim());
-      // For simplicity in pagination, we might just reload or prepend if on first page.
-      // But reloading is safer to ensure total count and order.
       await fetchPermissions();
       toast.success("Permission created and assigned to Developer");
       setCreateDialogOpen(false);
@@ -217,7 +215,7 @@ const RolesPermissionsPage = () => {
           rows={permissions}
           columns={columns}
           loading={loading}
-          rowCount={total}
+          rowCount={totalRows}
           paginationMode="server"
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}

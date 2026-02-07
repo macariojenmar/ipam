@@ -38,6 +38,11 @@ const IpManagementPage = () => {
   const [typeFilter, setTypeFilter] = useState("all");
   const [ips, setIps] = useState<IpAddress[]>([]);
   const [loading, setLoading] = useState(true);
+  const [totalRows, setTotalRows] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
   const { hasPermission, user } = useAuthStore();
   const isAdmin = user?.role_names?.some((role) =>
     CAN_EDIT_FULL_ROLES.includes(role),
@@ -69,12 +74,18 @@ const IpManagementPage = () => {
     processing: false,
   });
 
-  const fetchIps = async (searchTerm: string, type: string) => {
+  const fetchIps = async (
+    searchTerm: string,
+    type: string,
+    page: number,
+    pageSize: number,
+  ) => {
     setLoading(true);
     try {
-      const response = await getIps(1, 10, searchTerm, type);
+      const response = await getIps(page + 1, pageSize, searchTerm, type);
       if (response.ok && response.data) {
         setIps(response.data.data);
+        setTotalRows(response.data.total);
       } else {
         toast.error("Failed to fetch IP addresses");
       }
@@ -99,7 +110,12 @@ const IpManagementPage = () => {
         toast.success(
           `IP Address ${values.ip} ${ipModal.ip ? "updated" : "created"} successfully`,
         );
-        fetchIps(search, typeFilter);
+        fetchIps(
+          search,
+          typeFilter,
+          paginationModel.page,
+          paginationModel.pageSize,
+        );
         setIpModal({
           open: false,
           ip: null,
@@ -131,7 +147,12 @@ const IpManagementPage = () => {
       const response = await deleteIpAddress(deleteDialog.ip.id);
       if (response.ok) {
         toast.success("IP Address deleted successfully");
-        fetchIps(search, typeFilter);
+        fetchIps(
+          search,
+          typeFilter,
+          paginationModel.page,
+          paginationModel.pageSize,
+        );
         setDeleteDialog({ open: false, ip: null, processing: false });
       } else {
         toast.error("Failed to delete IP address");
@@ -144,11 +165,16 @@ const IpManagementPage = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchIps(search, typeFilter);
+      fetchIps(
+        search,
+        typeFilter,
+        paginationModel.page,
+        paginationModel.pageSize,
+      );
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, typeFilter]);
+  }, [search, typeFilter, paginationModel]);
 
   const columns: GridColDef[] = [
     {
@@ -267,6 +293,8 @@ const IpManagementPage = () => {
       <PageLabel
         title="IP Management"
         subTitle="Manage and track your assigned IP addresses."
+        count={totalRows}
+        loading={loading}
       >
         <Button
           variant="contained"
@@ -294,13 +322,19 @@ const IpManagementPage = () => {
         <SearchField
           placeholder="Search for IP, label, or author"
           value={search}
-          onChange={setSearch}
+          onChange={(val) => {
+            setSearch(val);
+            setPaginationModel((prev) => ({ ...prev, page: 0 }));
+          }}
         />
         <TextField
           size="small"
           select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={(e) => {
+            setTypeFilter(e.target.value);
+            setPaginationModel((prev) => ({ ...prev, page: 0 }));
+          }}
           sx={{
             minWidth: 120,
           }}
@@ -317,6 +351,11 @@ const IpManagementPage = () => {
           loading={loading}
           disableRowSelectionOnClick
           getRowId={(row) => row.id}
+          paginationMode="server"
+          rowCount={totalRows}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[5, 10, 25, 50]}
         />
       </Box>
 

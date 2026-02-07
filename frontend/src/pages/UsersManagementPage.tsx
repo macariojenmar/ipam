@@ -62,7 +62,7 @@ const UsersManagementPage = () => {
   const { hasPermission } = useAuthStore();
   const [users, setUsers] = useState<UserDetail[]>([]);
   const [loading, setLoading] = useState(true);
-  const [rowCount, setRowCount] = useState(0);
+  const [totalRows, setTotalRows] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
     page: 0,
@@ -108,7 +108,7 @@ const UsersManagementPage = () => {
       );
       if (response.ok && response.data) {
         setUsers(response.data.data);
-        setRowCount(response.data.total);
+        setTotalRows(response.data.total);
       } else {
         toast.error("Failed to fetch users");
       }
@@ -321,6 +321,8 @@ const UsersManagementPage = () => {
       <PageLabel
         title="User Management"
         subTitle="Approve or reject user registration requests."
+        count={totalRows}
+        loading={loading}
       >
         <Button
           variant="contained"
@@ -364,7 +366,7 @@ const UsersManagementPage = () => {
         <DataGrid
           rows={users}
           columns={columns}
-          rowCount={rowCount}
+          rowCount={totalRows}
           loading={loading}
           pageSizeOptions={[5, 10, 25, 50]}
           paginationModel={paginationModel}

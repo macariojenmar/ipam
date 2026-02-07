@@ -7,3 +7,13 @@ export const generateRandomPassword = (length: number = 8): string => {
   }
   return retVal;
 };
+
+export const formatNumberCompact = (num: number): string => {
+  if (num === undefined || num === null) return "0";
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  })
+    .format(num)
+    .toUpperCase();
+};
