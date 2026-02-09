@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { getCurrentUser, type User } from "../services/api";
+import { type User } from "../services/api";
+import { getCurrentUser } from "../services/authService";
 import { PageList } from "../enums/pageEnums";
 import { DEVELOPER, SUPER_ADMIN } from "../enums/roleEnums";
 
@@ -12,6 +13,7 @@ interface AuthState {
   initialize: () => Promise<void>;
   hasPermission: (permission: string) => boolean;
   getDefaultRoute: () => string;
+  setUser: (user: User) => void;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -51,4 +53,5 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     return hasAdminRole ? PageList.DASHBOARD : PageList.IP_MANAGEMENT;
   },
+  setUser: (user) => set({ user }),
 }));
