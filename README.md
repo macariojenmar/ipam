@@ -143,9 +143,9 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
 
 ## 🔑 Initial User Accounts (Seeded)
 
-| Name       | Role        | Email              | Password   |
-| :--------- | :---------- | :----------------- | :--------- |
-| **Jenmar** | Super-Admin | `jenmar@email.com` | `password` |
+| Name       | Role      | Email              | Password   |
+| :--------- | :-------- | :----------------- | :--------- |
+| **Jenmar** | Developer | `jenmar@email.com` | `password` |
 
 > [!IMPORTANT]
 > **Seed Account Password:** Every seeded user in the system uses the password `password` by default.
