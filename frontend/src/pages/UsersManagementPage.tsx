@@ -36,7 +36,7 @@ import {
   ARCHIVED,
   APPROVED,
 } from "../enums/statusEnums";
-import { Check, Pencil, Plus, X } from "lucide-react";
+import { Check, Pencil, Plus, X, RefreshCcw } from "lucide-react";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import UserModal from "../components/UserModal";
 import SearchField from "../components/SearchField";
@@ -94,7 +94,11 @@ const UsersManagementPage = () => {
     user: null,
     processing: false,
   });
-  const { data: usersData, isFetching: loading } = useUsers(
+  const {
+    data: usersData,
+    isFetching: loading,
+    refetch,
+  } = useUsers(
     paginationModel.page,
     paginationModel.pageSize,
     search,
@@ -299,15 +303,22 @@ const UsersManagementPage = () => {
         count={totalRows}
         loading={loading}
       >
-        <Button
-          variant="contained"
-          startIcon={<Plus size={22} />}
-          onClick={() =>
-            setUserModal({ open: true, user: null, processing: false })
-          }
-        >
-          Add New User
-        </Button>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Tooltip title="Refetch Data">
+            <IconButton onClick={() => refetch()} disabled={loading}>
+              <RefreshCcw size={20} />
+            </IconButton>
+          </Tooltip>
+          <Button
+            variant="contained"
+            startIcon={<Plus size={22} />}
+            onClick={() =>
+              setUserModal({ open: true, user: null, processing: false })
+            }
+          >
+            Add New User
+          </Button>
+        </Stack>
       </PageLabel>
 
       <Stack

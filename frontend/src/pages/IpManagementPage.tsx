@@ -24,7 +24,7 @@ import { toast } from "react-hot-toast";
 import { MainLayout } from "../components/MainLayout";
 import PageLabel from "../components/PageLabel";
 import RelativeTimeTooltip from "../components/RelativeTimeTooltip";
-import { Pencil, Plus, Trash2, Globe } from "lucide-react";
+import { Pencil, Plus, Trash2, Globe, RefreshCcw } from "lucide-react";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import IpAddressModal from "../components/IpAddressModal";
 import { UserAvatar } from "../components/UserAvatar";
@@ -43,7 +43,11 @@ const IpManagementPage = () => {
     pageSize: 10,
   });
 
-  const { data, isFetching: loading } = useIps(
+  const {
+    data,
+    isFetching: loading,
+    refetch,
+  } = useIps(
     paginationModel.page,
     paginationModel.pageSize,
     search,
@@ -118,7 +122,7 @@ const IpManagementPage = () => {
           toast.error(errorData?.message ?? "Failed to save IP address");
         }
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while saving IP address");
     }
     setIpModal((prev) => ({ ...prev, processing: false }));
@@ -137,7 +141,7 @@ const IpManagementPage = () => {
       } else {
         toast.error("Failed to delete IP address");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while deleting IP address");
     }
     setDeleteDialog((prev) => ({ ...prev, processing: false }));
@@ -259,20 +263,27 @@ const IpManagementPage = () => {
         count={totalRows}
         loading={loading}
       >
-        <Button
-          variant="contained"
-          startIcon={<Plus size={22} />}
-          onClick={() =>
-            setIpModal({
-              open: true,
-              ip: null,
-              processing: false,
-              canEditFull: true,
-            })
-          }
-        >
-          Add IP Address
-        </Button>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Tooltip title="Refetch Data">
+            <IconButton onClick={() => refetch()} disabled={loading}>
+              <RefreshCcw size={20} />
+            </IconButton>
+          </Tooltip>
+          <Button
+            variant="contained"
+            startIcon={<Plus size={22} />}
+            onClick={() =>
+              setIpModal({
+                open: true,
+                ip: null,
+                processing: false,
+                canEditFull: true,
+              })
+            }
+          >
+            Add IP Address
+          </Button>
+        </Stack>
       </PageLabel>
 
       <Stack

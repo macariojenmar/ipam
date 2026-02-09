@@ -10,5 +10,6 @@ export const usePermissions = (
     queryKey: ["permissions", { page, pageSize, search }],
     queryFn: () => getPermissions(page + 1, pageSize, search),
     placeholderData: (previousData) => previousData,
+    staleTime: 60 * 1000,
   });
 };

@@ -17,5 +17,6 @@ export const useIps = (
       return response.data;
     },
     placeholderData: (previousData) => previousData,
+    staleTime: 60 * 1000,
   });
 };
