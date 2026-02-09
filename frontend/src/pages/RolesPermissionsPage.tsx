@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -20,104 +20,107 @@ import PageLabel from "../components/PageLabel";
 import SearchField from "../components/SearchField";
 import PermissionModal from "../components/PermissionModal";
 import {
-  getPermissions,
   updatePermissionRole,
   createPermission,
   type PermissionItem,
 } from "../services/roleService";
+import { usePermissions } from "../hooks/usePermissions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DEVELOPER, SUPER_ADMIN, USER } from "../enums/roleEnums";
 
 const RolesPermissionsPage = () => {
   const theme = useTheme();
-  const [permissions, setPermissions] = useState<PermissionItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [creating, setCreating] = useState(false);
   const [search, setSearch] = useState("");
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
   });
-  const [totalRows, setTotalRows] = useState(0);
-  const roles = [DEVELOPER, SUPER_ADMIN, USER];
 
-  const fetchPermissions = async () => {
-    setLoading(true);
-    try {
-      const data = await getPermissions(
-        paginationModel.page + 1,
-        paginationModel.pageSize,
-        search,
-      );
-      setPermissions(data.data);
-      setTotalRows(data.total);
-    } catch (error) {
-      toast.error("Failed to load permissions");
-    }
-    setLoading(false);
-  };
+  const roles: string[] = [DEVELOPER, SUPER_ADMIN, USER];
+  const { data: permissionsData, isLoading: loading } = usePermissions(
+    paginationModel.page,
+    paginationModel.pageSize,
+    search,
+  );
 
-  const handleToggle = async (
+  const permissions = permissionsData?.data || [];
+  const totalRows = permissionsData?.total || 0;
+
+  const toggleMutation = useMutation({
+    mutationFn: async ({
+      permissionId,
+      role,
+      isEnabled,
+    }: {
+      permissionId: string;
+      role: string;
+      isEnabled: boolean;
+    }) => {
+      await updatePermissionRole(permissionId, role, isEnabled);
+    },
+    onMutate: async ({ permissionId, role, isEnabled }) => {
+      await queryClient.cancelQueries({ queryKey: ["permissions"] });
+      const previousPermissions = queryClient.getQueryData(["permissions"]);
+
+      queryClient.setQueriesData({ queryKey: ["permissions"] }, (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          data: old.data.map((perm: PermissionItem) =>
+            perm.id === permissionId
+              ? {
+                  ...perm,
+                  roles: {
+                    ...perm.roles,
+                    [role]: isEnabled,
+                  },
+                }
+              : perm,
+          ),
+        };
+      });
+
+      return { previousPermissions };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousPermissions) {
+        queryClient.setQueryData(["permissions"], context.previousPermissions);
+      }
+      toast.error("Failed to update permission");
+    },
+    onSuccess: () => {
+      toast.success("Saved");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["permissions"] });
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (name: string) => createPermission(name.trim()),
+    onSuccess: () => {
+      toast.success("Permission created and assigned to Developer");
+      setCreateDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["permissions"] });
+    },
+    onError: () => {
+      toast.error("Failed to create permission");
+    },
+  });
+
+  const handleToggle = (
     permissionId: string,
     role: string,
     currentValue: boolean,
   ) => {
-    setPermissions((prev) =>
-      prev.map((perm) =>
-        perm.id === permissionId
-          ? {
-              ...perm,
-              roles: {
-                ...perm.roles,
-                [role as keyof typeof perm.roles]: !currentValue,
-              },
-            }
-          : perm,
-      ),
-    );
-
-    const toastId = toast.loading("Saving...");
-    try {
-      await updatePermissionRole(permissionId, role, !currentValue);
-      toast.success("Saved", { id: toastId });
-    } catch (error) {
-      toast.error("Failed to update permission", { id: toastId });
-      setPermissions((prev) =>
-        prev.map((perm) =>
-          perm.id === permissionId
-            ? {
-                ...perm,
-                roles: {
-                  ...perm.roles,
-                  [role as keyof typeof perm.roles]: currentValue,
-                },
-              }
-            : perm,
-        ),
-      );
-    }
+    toggleMutation.mutate({ permissionId, role, isEnabled: !currentValue });
   };
 
   const handleCreate = async (name: string) => {
-    setCreating(true);
-    try {
-      const newPermission = await createPermission(name.trim());
-      await fetchPermissions();
-      toast.success("Permission created and assigned to Developer");
-      setCreateDialogOpen(false);
-    } catch (error) {
-      toast.error("Failed to create permission");
-    }
-    setCreating(false);
+    createMutation.mutate(name);
   };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchPermissions();
-    }, 400);
-
-    return () => clearTimeout(timer);
-  }, [search, paginationModel]);
 
   const columns: GridColDef[] = [
     {
@@ -148,7 +151,7 @@ const RolesPermissionsPage = () => {
         </Stack>
       ),
     },
-    ...roles.map((role) => ({
+    ...roles.map((role: string) => ({
       field: role,
       headerName: role,
       flex: 1,
@@ -236,7 +239,7 @@ const RolesPermissionsPage = () => {
         open={createDialogOpen}
         onClose={() => setCreateDialogOpen(false)}
         onCreate={handleCreate}
-        creating={creating}
+        creating={createMutation.isPending}
       />
     </MainLayout>
   );
