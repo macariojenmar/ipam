@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,6 @@ import {
   type GridPaginationModel,
 } from "@mui/x-data-grid";
 import {
-  getUsers,
   updateUserStatus,
   createUser,
   updateUser,
@@ -43,6 +42,8 @@ import UserModal from "../components/UserModal";
 import SearchField from "../components/SearchField";
 import { useAuthStore } from "../store/useAuthStore";
 import { CAN_APPROVE_USERS, CAN_REJECT_USERS } from "../enums/permissionEnums";
+import { useUsers } from "../hooks/useUsers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -60,9 +61,6 @@ const getStatusColor = (status: string) => {
 
 const UsersManagementPage = () => {
   const { hasPermission } = useAuthStore();
-  const [users, setUsers] = useState<UserDetail[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [totalRows, setTotalRows] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
     page: 0,
@@ -91,112 +89,84 @@ const UsersManagementPage = () => {
     user: null,
     processing: false,
   });
+  const {
+    data: usersData,
+    isLoading: loading,
+  } = useUsers(
+    paginationModel.page,
+    paginationModel.pageSize,
+    search,
+    statusFilter,
+  );
 
-  const fetchUsers = async (
-    page: number,
-    pageSize: number,
-    searchTerm: string,
-    status: string,
-  ) => {
-    setLoading(true);
-    try {
-      const response = await getUsers(
-        page + 1,
-        pageSize,
-        searchTerm || "",
-        status === "all" ? "" : status,
+  const users = usersData?.data || [];
+  const totalRows = usersData?.total || 0;
+
+  const queryClient = useQueryClient();
+
+  const statusUpdateMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: string }) => {
+      const response = await updateUserStatus(id, status);
+      if (!response.ok) throw new Error("Failed to update user status");
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      const user = confirmDialog.user;
+      toast.success(
+        `User ${user?.name} has been ${
+          variables.status === ACTIVE ? APPROVED : REJECTED
+        }`,
       );
-      if (response.ok && response.data) {
-        setUsers(response.data.data);
-        setTotalRows(response.data.total);
-      } else {
-        toast.error("Failed to fetch users");
-      }
-    } catch (error) {
-      toast.error("An error occurred while fetching users");
-    }
-    setLoading(false);
-  };
-
-  const handleStatusUpdate = async () => {
-    if (!confirmDialog.user) return;
-
-    setConfirmDialog((prev) => ({ ...prev, processing: true }));
-    const newStatus = confirmDialog.type === APPROVED ? ACTIVE : REJECTED;
-
-    try {
-      const response = await updateUserStatus(confirmDialog.user.id, newStatus);
-      if (response.ok) {
-        toast.success(
-          `User ${confirmDialog.user.name} has been ${
-            confirmDialog.type === APPROVED ? APPROVED : REJECTED
-          }`,
-        );
-        fetchUsers(
-          paginationModel.page,
-          paginationModel.pageSize,
-          search,
-          statusFilter,
-        );
-        setConfirmDialog((prev) => ({ ...prev, open: false }));
-      } else {
-        toast.error("Failed to update user status");
-      }
-    } catch (error) {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      setConfirmDialog((prev) => ({ ...prev, open: false }));
+    },
+    onError: () => {
       toast.error("An error occurred while updating user status");
-    }
-    setConfirmDialog((prev) => ({ ...prev, processing: false }));
-  };
+    },
+  });
 
-  const handleSaveUser = async (values: UserSaveData) => {
-    setUserModal((prev) => ({ ...prev, processing: true }));
-    try {
+  const saveUserMutation = useMutation({
+    mutationFn: async (values: UserSaveData) => {
       const response = userModal.user
         ? await updateUser(userModal.user.id, values)
         : await createUser(values);
-
-      if (response.ok) {
-        toast.success(
-          `User ${values.name} ${
-            userModal.user ? "updated" : "created"
-          } successfully`,
-        );
-        fetchUsers(
-          paginationModel.page,
-          paginationModel.pageSize,
-          search,
-          statusFilter,
-        );
-        setUserModal({ open: false, user: null, processing: false });
-      } else {
+      if (!response.ok) {
         const errorData = response.data as ApiErrorResponse;
-        const errors = errorData?.errors;
-        if (errors) {
-          Object.keys(errors).forEach((key) => {
-            toast.error(errors[key][0]);
-          });
-        } else {
-          toast.error(errorData?.message ?? "Failed to save user");
-        }
+        throw errorData;
       }
-    } catch (error) {
-      toast.error("An error occurred while saving user");
-    }
-    setUserModal((prev) => ({ ...prev, processing: false }));
+      return response.data;
+    },
+    onSuccess: (_, values) => {
+      toast.success(
+        `User ${values.name} ${
+          userModal.user ? "updated" : "created"
+        } successfully`,
+      );
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      setUserModal({ open: false, user: null, processing: false });
+    },
+    onError: (error: ApiErrorResponse) => {
+      const errors = error?.errors;
+      if (errors) {
+        Object.keys(errors).forEach((key) => {
+          toast.error(errors[key][0]);
+        });
+      } else {
+        toast.error(error?.message ?? "Failed to save user");
+      }
+    },
+  });
+
+  const handleStatusUpdate = async () => {
+    if (!confirmDialog.user) return;
+    const newStatus = confirmDialog.type === APPROVED ? ACTIVE : REJECTED;
+    statusUpdateMutation.mutate({ id: confirmDialog.user.id, status: newStatus });
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchUsers(
-        paginationModel.page,
-        paginationModel.pageSize,
-        search,
-        statusFilter,
-      );
-    }, 500);
+  const handleSaveUser = async (values: UserSaveData) => {
+    saveUserMutation.mutate(values);
+  };
 
-    return () => clearTimeout(timer);
-  }, [paginationModel.page, paginationModel.pageSize, search, statusFilter]);
 
   const columns: GridColDef[] = [
     {
@@ -378,7 +348,7 @@ const UsersManagementPage = () => {
 
       <ConfirmationDialog
         open={confirmDialog.open}
-        loading={confirmDialog.processing}
+        loading={statusUpdateMutation.isPending}
         onClose={() => setConfirmDialog((prev) => ({ ...prev, open: false }))}
         onConfirm={handleStatusUpdate}
         title={`${confirmDialog.type === APPROVED ? "Approve" : "Reject"} User`}
@@ -390,7 +360,7 @@ const UsersManagementPage = () => {
       <UserModal
         open={userModal.open}
         user={userModal.user}
-        loading={userModal.processing}
+        loading={saveUserMutation.isPending}
         onClose={() =>
           setUserModal({ open: false, user: null, processing: false })
         }
