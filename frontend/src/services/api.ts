@@ -34,4 +34,40 @@ export interface User {
   roles?: { id: number; name: string }[];
 }
 
+api.axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Reject if not a 401 or if it's already a retry
+    if (error.response?.status !== 401 || originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    // Don't retry refresh or login requests
+    if (
+      originalRequest.url?.includes("/auth/refresh") ||
+      originalRequest.url?.includes("/auth/login")
+    ) {
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      // Import dynamically to avoid circular dependency
+      const { refreshToken } = await import("./authService");
+      const refreshResponse = await refreshToken();
+
+      if (refreshResponse.ok) {
+        return api.axiosInstance(originalRequest);
+      }
+    } catch (refreshError) {
+      // If refresh fails, let the error through
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 export default api;

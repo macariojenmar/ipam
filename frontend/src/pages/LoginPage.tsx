@@ -41,7 +41,7 @@ const LoginPage = () => {
       try {
         const response = await login(values);
         if (response.ok && response.data) {
-          setAuthUser(response.data.user);
+          setAuthUser(response.data.user, response.data.expires_in);
           toast.success("Welcome back!");
           navigate(getDefaultRoute());
         } else {

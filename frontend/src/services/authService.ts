@@ -61,3 +61,7 @@ export const updateProfile = async (data: ProfileUpdateData) => {
 export const updatePassword = async (data: PasswordUpdateData) => {
   return api.put<ProfileResponse>("/auth/password", data);
 };
+
+export const refreshToken = async () => {
+  return api.post<LoginResponse>("/auth/refresh");
+};
