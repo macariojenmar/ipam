@@ -107,6 +107,9 @@ export const Navbar = () => {
                     <Typography variant="caption" color="text.secondary">
                       {user?.email}
                     </Typography>
+                    <Typography variant="caption" color="text.disabled">
+                      {user?.role_names[0]}
+                    </Typography>
                   </Stack>
                   <Divider sx={{ mb: 1 }} />
                   <MenuItem onClick={() => handleLogout()}>

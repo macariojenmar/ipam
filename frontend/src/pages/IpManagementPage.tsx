@@ -169,7 +169,7 @@ const IpManagementPage = () => {
           >
             <Globe size={18} />
           </Box>
-          <Typography fontWeight={700} variant="body2">
+          <Typography fontWeight={700} variant="body2" maxWidth={150} noWrap>
             {row.ip}
           </Typography>
         </Stack>
