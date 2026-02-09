@@ -28,6 +28,8 @@ import RelativeTimeTooltip from "./RelativeTimeTooltip";
 import AuditLogDetailModal from "./AuditLogDetailModal.tsx";
 import { type AuditLog } from "../services/api";
 import { getEventIcon } from "../utils/auditUtils";
+import { useAuthStore } from "../store/useAuthStore";
+import { DEVELOPER } from "../enums/roleEnums";
 
 const AuditLogsSection = () => {
   const theme = useTheme();
@@ -51,6 +53,22 @@ const AuditLogsSection = () => {
   );
 
   const { data: events } = useAuditEvents();
+  const { user } = useAuthStore();
+  const isDeveloper = user?.role_names?.includes(DEVELOPER);
+
+  const filteredLogs = auditLogs?.data.filter((log) => {
+    if (isDeveloper) return true;
+    
+    const restrictedEvents = [
+      "user_role_assigned",
+      "user_role_revoked",
+      "permission_created",
+      "permission_assigned_to_role",
+      "permission_revoked_from_role"
+    ];
+    
+    return !restrictedEvents.includes(log.event as string);
+  }) || [];
 
   const handleClearFilters = () => {
     setSearch("");
@@ -153,14 +171,14 @@ const AuditLogsSection = () => {
             isLoading
             description="Loading recent activity..."
           />
-        ) : auditLogs?.data.length === 0 ? (
+        ) : filteredLogs.length === 0 ? (
           <EmptyState
             icon={FolderOpen}
             gap={1}
             description="No recent activity found"
           />
         ) : (
-          auditLogs?.data.map((log) => {
+          filteredLogs.map((log) => {
             const { icon: EventIcon, color } = getEventIcon(log.event);
             return (
               <Card 

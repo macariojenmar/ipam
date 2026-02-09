@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditLog;
 use App\Enums\AuditEvent;
+use App\Enums\RoleEnum;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuditLogController extends Controller
 {
@@ -19,20 +21,40 @@ class AuditLogController extends Controller
         $query = AuditLog::with('user:id,name')
             ->search($search)
             ->when($event, fn($q) => $q->byEvent($event))
-            ->inDateRange($startDate, $endDate)
-            ->latest();
+            ->inDateRange($startDate, $endDate);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if (!$user->hasRole(RoleEnum::DEVELOPER->value)) {
+            $restrictedEvents = collect(AuditEvent::cases())
+                ->filter(fn($e) => $e->isRestricted())
+                ->map(fn($e) => $e->value)
+                ->toArray();
+
+            $query->whereNotIn('event', $restrictedEvents);
+        }
+
+        $query->latest();
 
         return response()->json($query->paginate($perPage));
     }
 
     public function events()
     {
-        $events = collect(AuditEvent::cases())->map(function ($event) {
-            return [
-                'value' => $event->value,
-                'label' => $event->description(),
-            ];
-        });
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $isDeveloper = $user->hasRole(RoleEnum::DEVELOPER->value);
+
+        $events = collect(AuditEvent::cases())
+            ->filter(fn($event) => $isDeveloper || !$event->isRestricted())
+            ->map(function ($event) {
+                return [
+                    'value' => $event->value,
+                    'label' => $event->description(),
+                ];
+            })
+            ->values();
 
         return response()->json($events);
     }

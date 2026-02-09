@@ -60,4 +60,18 @@ enum AuditEvent: string
     {
         return array_column(self::cases(), 'value');
     }
+
+    /**
+     * Check if the event is restricted to developers only
+     */
+    public function isRestricted(): bool
+    {
+        return in_array($this, [
+            self::USER_ROLE_ASSIGNED,
+            self::USER_ROLE_REVOKED,
+            self::PERMISSION_CREATED,
+            self::PERMISSION_ASSIGNED,
+            self::PERMISSION_REVOKED,
+        ]);
+    }
 }
