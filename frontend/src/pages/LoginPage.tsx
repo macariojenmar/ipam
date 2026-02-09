@@ -9,6 +9,7 @@ import {
   useTheme,
   CircularProgress,
   Link,
+  Divider,
 } from "@mui/material";
 import { ArrowLeft, Earth, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -145,35 +146,31 @@ const LoginPage = () => {
                 {formik.isSubmitting ? <CircularProgress size={20} /> : "Login"}
               </Button>
             </form>
-
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              sx={{ width: "100%" }}
-              alignItems={"center"}
+          </Stack>
+          <Divider sx={{ my: 4 }} />
+          <Stack
+            sx={{ width: "100%" }}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={0.5}
+          >
+            <Typography variant="caption" color="text.secondary">
+              Don't have an account?
+            </Typography>
+            <Link
+              onClick={() => navigate("/signup")}
+              sx={{
+                fontSize: "13px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "none",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              }}
             >
-              <Button
-                variant="text"
-                size="small"
-                sx={{ color: "text.secondary", px: 2 }}
-              >
-                Forgot password?
-              </Button>
-              <Link
-                onClick={() => navigate("/signup")}
-                sx={{
-                  fontSize: "12px",
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
-              >
-                Sign Up
-              </Link>
-            </Stack>
+              Sign Up
+            </Link>
           </Stack>
         </Card>
       </Container>

@@ -9,6 +9,7 @@ import {
   useTheme,
   CircularProgress,
   Link,
+  Divider,
 } from "@mui/material";
 import { ArrowLeft, Earth, Mail, CheckCircle, UserRound } from "lucide-react";
 import { useState } from "react";
@@ -249,31 +250,31 @@ const SignUpPage = () => {
                 )}
               </Button>
             </form>
-
-            <Stack
-              direction="row"
-              justifyContent="center"
-              sx={{ width: "100%" }}
-              alignItems={"center"}
+          </Stack>
+          <Divider sx={{ my: 4 }} />
+          <Stack
+            justifyContent="center"
+            sx={{ width: "100%" }}
+            alignItems={"center"}
+          >
+            <Typography variant="caption" color="text.secondary">
+              Already have an account?
+            </Typography>
+            <Link
+              onClick={() => navigate("/login")}
+              sx={{
+                fontSize: "13px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                ml: 0.5,
+                textDecoration: "none",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              }}
             >
-              <Typography variant="caption" color="text.secondary">
-                Already have an account?{" "}
-                <Link
-                  onClick={() => navigate("/login")}
-                  sx={{
-                    fontWeight: "bold",
-                    cursor: "pointer",
-                    ml: 0.5,
-                    textDecoration: "none",
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
-                >
-                  Login
-                </Link>
-              </Typography>
-            </Stack>
+              Login
+            </Link>
           </Stack>
         </Card>
       </Container>
