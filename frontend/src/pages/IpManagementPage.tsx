@@ -173,7 +173,7 @@ const IpManagementPage = () => {
     {
       field: "type",
       headerName: "Type",
-      flex: 1,
+      flex: 0.5,
       renderCell: ({ row }) => (
         <Chip
           label={row.type}

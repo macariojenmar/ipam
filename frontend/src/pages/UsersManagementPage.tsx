@@ -195,7 +195,7 @@ const UsersManagementPage = () => {
     {
       field: "status",
       headerName: "Status",
-      flex: 1,
+      flex: 0.7,
       renderCell: ({ row }) => (
         <Chip
           label={row.status}
@@ -207,6 +207,7 @@ const UsersManagementPage = () => {
             fontWeight: 600,
             py: 2,
             px: 1,
+            borderRadius: "10px",
           }}
         />
       ),
@@ -214,7 +215,7 @@ const UsersManagementPage = () => {
     {
       field: "role",
       headerName: "Role",
-      flex: 1,
+      flex: 0.7,
       renderCell: ({ row }) => row.role_names[0],
     },
     {
@@ -236,7 +237,7 @@ const UsersManagementPage = () => {
     {
       field: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: 0.7,
       renderCell: ({ row }) => (
         <Stack direction={"row"} alignItems={"center"} mt={1.2}>
           <Tooltip title="Edit">
