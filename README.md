@@ -1,14 +1,16 @@
-# IPAM Project (Full-Stack Decoupled)
+# IPAM Project
 
 A Dockerized full-stack application for IP Address Management (IPAM) featuring a Laravel 11 backend and a React (Vite) frontend.
 
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Docker & Docker Compose installed.
 - (Optional) Node.js (v20+) & PHP (8.4) installed locally for IDE support.
 
 ### Run with Docker
+
 1. **Clone the repository.**
 2. **Setup environment:**
    ```bash
@@ -34,7 +36,9 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
    ```bash
    docker-compose exec backend php artisan migrate:fresh --seed
    ```
+
 ### Run Frontend Locally
+
 1. **Navigate to the frontend directory:**
    ```bash
    cd frontend
@@ -49,6 +53,7 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
    ```
 
 ### Access the application
+
 - **Frontend:** [http://localhost:5173/](http://localhost:5173/)
 - **Backend API:** [http://localhost:8000](http://localhost:8000)
 
@@ -56,55 +61,108 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
 
 ## 🛠 Technology Stack
 
-### Backend
-- **Framework:** Laravel 11 (Latest Stable)
-- **Runtime:** PHP 8.4 (Latest Stable)
-- **Permissions:** Spatie Laravel Permission
-- **Web Server:** Nginx (Stable Alpine)
-- **Database:** MySQL 8.0
+### 🖥️ Backend
 
-### Frontend
-- **Framework:** React 18+
-- **Build Tool:** Vite (configured with HMR for Docker)
+- **Framework:** [Laravel 11](https://laravel.com/) (Latest Stable)
+- **Runtime:** PHP 8.4 (Latest Stable)
+- **Authentication:** JWT (JSON Web Token) via `php-open-source-saver/jwt-auth`
+- **Permissions:** RBAC (Role-Based Access Control) via `spatie/laravel-permission`
+- **Database:** MySQL 8.0
+- **Web Server:** Nginx (Alpine-based)
+
+### 🎨 Frontend
+
+- **Framework:** [React 19](https://react.dev/)
+- **Build Tool:** [Vite](https://vitejs.dev/) (with HMR)
 - **Language:** TypeScript
-- **Runtime:** Node.js 20 (Alpine)
+- **UI Library:** [Material UI (MUI)](https://mui.com/material-ui/)
+- **State Management:** [Zustand](https://zustand-demo.pmnd.rs/)
+- **Data Fetching:** [TanStack Query v5](https://tanstack.com/query/latest) (React Query)
+
+---
+
+## 📦 Core Packages
+
+### Backend (Composer)
+
+- `laravel/framework`: Core Web Framework
+- `php-open-source-saver/jwt-auth`: Secure JWT authentication for API
+- `spatie/laravel-permission`: Robust permission and role management
+- `laravel/tinker`: Powerful REPL for Laravel
+- `fakerphp/faker`: Mock data generation for testing/seeding
+
+### Frontend (NPM)
+
+- `@mui/material`: Google's Material Design components
+- `@mui/x-data-grid`: Premium data tables for IP and User management
+- `@tanstack/react-query`: Powerful asynchronous state management
+- `formik` & `yup`: Advanced form handling and schema-based validation
+- `zustand`: Lightweight global state management
+- `react-hot-toast`: Beautiful, responsive notifications
+- `lucide-react`: Modern and consistent icons
+- `apisauce`: Lightweight wrapper for Axios with standardized responses
 
 ---
 
 ## ✨ Features
 
-### Authentication & Authorization
-- **JWT-based Authentication**: Secure API interaction with token renewal support.
-- **RBAC (Role Based Access Control)**: Using Spatie for `Developer`, `User`, and `Super-Admin` roles.
-- **Approval Workflow**: Registering users start as `pending`. Super-admins must approve them (`active`) before they can log in.
+### 🛡️ Authentication & Security
 
-### IP Address Management
-- **IPv4/IPv6 Support**: Add and manage IP addresses with labels and comments.
-- **Permissions**:
-  - **Regular Users**: Can view all IPs, and update only their own IPs (label only).
-  - **Super-Admins**: Full CRUD access to all IP addresses.
+- **Secure JWT Flow**: Token-based authentication with automatic refresh strategies.
+- **Advanced RBAC**: Granular control for `Super-Admin`, `Developer`, and `User` roles.
+- **Admin Approval Workflow**: New registrations are held in a `pending` state until verified by an admin.
+- **Protected Routes**: Secure navigation for authenticated users with role-based redirection.
 
-### Immutable Audit Logging
-- **Change Tracking**: Every change to an IP address or User is logged.
-- **Session Focus**: Audit logs track changes within a user session and over the entire entity lifetime.
-- **Login/Logout Events**: Automated logging of authentication sessions.
-- **Security**: Logs are append-only and cannot be deleted via the application.
+### 🌐 IP Address Management (IPAM)
+
+- **Universal Support**: Full support for both IPv4 and IPv6 addresses.
+- **Dynamic Labeling**: Add custom labels and comments to any IP address.
+- **Ownership Controls**: Users can manage their own entries, while admins maintain global oversight.
+- **Advanced Filtering**: Search and filter IP addresses using high-performance data grids.
+
+### 👥 User & Access Management
+
+- **Centralized User Control**: Admins can approve, deactivate, or modify user roles.
+- **Permission Management**: Direct control over system-wide roles and specific permissions.
+- **Profile Self-Service**: Users can update their personal information and manage security settings (password).
+
+### 📜 Compliance & Audit
+
+- **Immutable Audit Logs**: Every modification to IPs or Users is automatically logged.
+- **History Tracking**: Complete visibility into "Who changed What and When."
+- **Session Intelligence**: Tracks login/logout events and active user sessions.
+- **Append-Only Integrity**: Logs cannot be modified or deleted via the application UI.
+
+### 📊 Dashboard & UI
+
+- **Real-time Analytics**: Quick overview of system state, IP counts, and user statistics.
+- **Responsive Design**: Fully mobile-friendly interface built with Material UI.
+- **Modern Landing Page**: Professional entry point for new users and stakeholders.
 
 ---
 
 ## 🔑 Initial User Accounts (Seeded)
 
-| Name | Role | Email | Password |
-| :--- | :--- | :--- | :--- |
-| **James Doe** | Developer | `james@email.com` | `password` |
-| **Jane Doe** | Super-Admin | `jane@email.com` | `password` |
-| **John Smith** | User | `john@email.com` | `password` |
+| Name       | Role        | Email              | Password   |
+| :--------- | :---------- | :----------------- | :--------- |
+| **Jenmar** | Super-Admin | `jenmar@email.com` | `password` |
+
+> [!IMPORTANT]
+> **Seed Account Password:** Every seeded user in the system uses the password `password` by default.
+
+### 🌱 Seeders
+
+The application includes automated seeders to populate the environment:
+
+- **UserSeeder**: Generates **51** users with various roles and statuses.
+- **IpSeeder**: Generates **100** IP addresses (mix of IPv4 and IPv6) with labels.
 
 ---
 
 ## 🛠 Common Commands
 
 ### Backend Operations
+
 ```bash
 # Run migrations and seeds
 docker-compose exec backend php artisan migrate:fresh --seed
@@ -117,20 +175,22 @@ docker-compose logs -f backend
 ```
 
 ### Database Credentials
-| Parameter | Value |
-| :--- | :--- |
-| **Host** | `127.0.0.1` |
-| **Port** | `3306` |
-| **User** | `sail` |
-| **Password** | `root` |
-| **Database** | `ipam` |
+
+| Parameter    | Value       |
+| :----------- | :---------- |
+| **Host**     | `127.0.0.1` |
+| **Port**     | `3306`      |
+| **User**     | `sail`      |
+| **Password** | `root`      |
+| **Database** | `ipam`      |
 
 ---
 
 ## 📦 Project Structure
+
 ```text
 ├── backend/            # PHP 8.4 Laravel 11 Backend
-├── frontend/           # React 18 + Vite TS Frontend
+├── frontend/           # React 19 + Vite TS Frontend
 ├── docker/             # Docker configuration files
 ├── docker-compose.yml  # Docker orchestration
 └── README.md
