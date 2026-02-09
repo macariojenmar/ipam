@@ -14,35 +14,46 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // James Doe - Developer
-        $james = User::create([
-            'name' => 'James Doe',
-            'email' => 'james@email.com',
+        // Create Developer
+        $developer = User::create([
+            'name' => 'Jenmar Macario',
+            'email' => 'jenmar@email.com',
             'password' => Hash::make('password'),
             'status' => UserStatus::ACTIVE,
             'reviewed_at' => now(),
         ]);
-        $james->assignRole('Developer');
+        $developer->assignRole('Developer');
 
-        // Jane Doe - Super-Admin
-        $jane = User::create([
-            'name' => 'Jane Doe',
-            'email' => 'jane@email.com',
-            'password' => Hash::make('password'),
-            'status' => UserStatus::ACTIVE,
-            'reviewed_at' => now(),
-        ]);
-        $jane->assignRole('Super-Admin');
+        // Create 5 Super Admins
+        $superAdmins = collect();
 
-        // John Smith - Regular User (Approved by Jane)
-        $john = User::create([
-            'name' => 'John Smith',
-            'email' => 'john@email.com',
-            'password' => Hash::make('password'),
-            'status' => UserStatus::ACTIVE,
-            'reviewed_by' => $jane->id,
-            'reviewed_at' => now(),
-        ]);
-        $john->assignRole('User');
+        for ($i = 1; $i <= 5; $i++) {
+            $user = User::create([
+                'name' => "Super Admin {$i}",
+                'email' => "superadmin{$i}@email.com",
+                'password' => Hash::make('password'),
+                'status' => UserStatus::ACTIVE,
+                'reviewed_at' => now(),
+            ]);
+
+            $user->assignRole('Super-Admin');
+            $superAdmins->push($user);
+        }
+
+        // Create 45 Regular Users
+        for ($i = 1; $i <= 45; $i++) {
+            $reviewer = $superAdmins->random();
+
+            $user = User::create([
+                'name' => "User {$i}",
+                'email' => "user{$i}@email.com",
+                'password' => Hash::make('password'),
+                'status' => UserStatus::ACTIVE,
+                'reviewed_by' => $reviewer->id,
+                'reviewed_at' => now(),
+            ]);
+
+            $user->assignRole('User');
+        }
     }
 }
