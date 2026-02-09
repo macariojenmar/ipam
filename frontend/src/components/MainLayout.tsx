@@ -22,6 +22,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
           flexGrow: 1,
           px: GLOBAL_X_MARGIN,
           py: 3,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         {children}

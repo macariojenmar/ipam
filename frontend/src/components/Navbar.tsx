@@ -16,11 +16,11 @@ import {
 } from "@mui/material";
 import { GLOBAL_X_MARGIN } from "../enums/themeEnums";
 import { ThemeSwitch } from "./ThemeSwitch";
-import { Earth, LogOut } from "lucide-react";
+import { Earth, LogOut, UserRound } from "lucide-react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { Fragment, useState } from "react";
-import { logout as apiLogout } from "../services/api";
+import { logout as apiLogout } from "../services/authService";
 import toast from "react-hot-toast";
 import { UserAvatar } from "./UserAvatar";
 
@@ -98,19 +98,39 @@ export const Navbar = () => {
                   onClick={handleClose}
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  sx={{
+                    "& .MuiMenu-paper": {
+                      width: "170px",
+                    },
+                  }}
                 >
                   <Stack sx={{ p: 2 }} alignItems={"center"}>
                     <UserAvatar name={user?.name} size={48} sx={{ mb: 1 }} />
-                    <Typography variant="body2" fontWeight={700}>
+                    <Typography
+                      variant="body2"
+                      fontWeight={700}
+                      maxWidth={130}
+                      noWrap
+                    >
                       {user?.name}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      maxWidth={130}
+                    >
                       {user?.email}
                     </Typography>
                     <Typography variant="caption" color="text.disabled">
                       {user?.role_names[0]}
                     </Typography>
                   </Stack>
+                  <MenuItem onClick={() => navigate("/profile")}>
+                    <ListItemIcon sx={{ color: "inherit" }}>
+                      <UserRound size={18} />
+                    </ListItemIcon>
+                    <Typography variant="body2">Profile</Typography>
+                  </MenuItem>
                   <Divider sx={{ mb: 1 }} />
                   <MenuItem onClick={() => handleLogout()}>
                     <ListItemIcon sx={{ color: "inherit" }}>

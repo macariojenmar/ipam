@@ -6,3 +6,4 @@ export const CAN_VIEW_USERS = "can-view-users";
 export const CAN_VIEW_DASHBOARD = "can-view-dashboard";
 export const CAN_VIEW_IP_MANAGEMENT = "can-view-ip-management";
 export const CAN_VIEW_ROLES_AND_PERMISSIONS = "can-view-roles-and-permissions";
+export const CAN_VIEW_PROFILE = "can-view-profile";

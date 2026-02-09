@@ -38,12 +38,14 @@ class RoleSeeder extends Seeder
             PermissionEnum::CAN_REJECT_USERS->value,
             PermissionEnum::CAN_VIEW_USERS->value,
             PermissionEnum::CAN_VIEW_IP_MANAGEMENT->value,
+            PermissionEnum::CAN_VIEW_PROFILE->value,
         ]);
 
         // User
         $userRole = Role::create(['name' => RoleEnum::USER->value, 'guard_name' => 'api']);
         $userRole->givePermissionTo([
-            PermissionEnum::CAN_VIEW_IP_MANAGEMENT->value
+            PermissionEnum::CAN_VIEW_IP_MANAGEMENT->value,
+            PermissionEnum::CAN_VIEW_PROFILE->value,
         ]);
     }
 }

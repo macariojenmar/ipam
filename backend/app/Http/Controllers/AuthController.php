@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\UpdateProfileRequest;
+use App\Http\Requests\Auth\UpdatePasswordRequest;
 use App\Enums\UserStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Services\AuditLogger;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -72,6 +75,39 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->respondWithToken(Auth::guard('api')->refresh());
+    }
+
+    public function updateProfile(UpdateProfileRequest $request)
+    {
+        $user = Auth::guard('api')->user();
+        $user->update($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile updated successfully.',
+            'user' => $user
+        ]);
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $user = Auth::guard('api')->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Current password does not match nuestro record.'
+            ]);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password updated successfully.'
+        ]);
     }
 
     protected function respondWithToken($token)

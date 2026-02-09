@@ -10,6 +10,7 @@ import {
   CAN_VIEW_IP_MANAGEMENT,
   CAN_VIEW_USERS,
   CAN_VIEW_ROLES_AND_PERMISSIONS,
+  CAN_VIEW_PROFILE,
 } from "./enums/permissionEnums";
 
 const LoginPage = lazy(() => import("./pages/LoginPage.tsx"));
@@ -24,6 +25,7 @@ const RolesPermissionsPage = lazy(
   () => import("./pages/RolesPermissionsPage.tsx"),
 );
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage.tsx"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage.tsx"));
 
 interface RouteConfig {
   path: string;
@@ -64,6 +66,11 @@ const App = () => {
       path: PageList.ROLES_AND_PERMISSIONS,
       element: <RolesPermissionsPage />,
       requiredPermission: CAN_VIEW_ROLES_AND_PERMISSIONS,
+    },
+    {
+      path: PageList.PROFILE,
+      element: <ProfilePage />,
+      requiredPermission: CAN_VIEW_PROFILE,
     },
     { path: "/", element: <LandingPage /> },
     {

@@ -12,6 +12,7 @@ enum PermissionEnum: string
     case CAN_VIEW_USERS = 'can-view-users';
     case CAN_VIEW_IP_MANAGEMENT = 'can-view-ip-management';
     case CAN_VIEW_ROLES_AND_PERMISSIONS = 'can-view-roles-and-permissions';
+    case CAN_VIEW_PROFILE = 'can-view-profile';
 
     public static function values(): array
     {
