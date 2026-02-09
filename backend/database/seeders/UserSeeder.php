@@ -15,45 +15,17 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Create Developer
-        $developer = User::create([
+        User::factory()->developer()->create([
             'name' => 'Jenmar Macario',
             'email' => 'jenmar@email.com',
-            'password' => Hash::make('password'),
-            'status' => UserStatus::ACTIVE,
-            'reviewed_at' => now(),
         ]);
-        $developer->assignRole('Developer');
 
         // Create 5 Super Admins
-        $superAdmins = collect();
-
-        for ($i = 1; $i <= 5; $i++) {
-            $user = User::create([
-                'name' => "Super Admin {$i}",
-                'email' => "superadmin{$i}@email.com",
-                'password' => Hash::make('password'),
-                'status' => UserStatus::ACTIVE,
-                'reviewed_at' => now(),
-            ]);
-
-            $user->assignRole('Super-Admin');
-            $superAdmins->push($user);
-        }
+        $superAdmins = User::factory()->count(5)->superAdmin()->create();
 
         // Create 45 Regular Users
-        for ($i = 1; $i <= 45; $i++) {
-            $reviewer = $superAdmins->random();
-
-            $user = User::create([
-                'name' => "User {$i}",
-                'email' => "user{$i}@email.com",
-                'password' => Hash::make('password'),
-                'status' => UserStatus::ACTIVE,
-                'reviewed_by' => $reviewer->id,
-                'reviewed_at' => now(),
-            ]);
-
-            $user->assignRole('User');
+        for ($i = 0; $i < 45; $i++) {
+            User::factory()->regularUser($superAdmins->random())->create();
         }
     }
 }
