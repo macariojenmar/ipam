@@ -8,9 +8,11 @@ use App\Http\Requests\UpdateIpAddressRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\RoleEnum;
+use App\Services\AuditLogger;
 
 class IpAddressController extends Controller
 {
+    public function __construct(protected AuditLogger $auditLogger) {}
     public function index(Request $request)
     {
         $perPage = $request->query('per_page', 10);
@@ -30,7 +32,10 @@ class IpAddressController extends Controller
         $data = $request->validated();
         $data['user_id'] = Auth::id();
 
-        IpAddress::create($data);
+        $ip = IpAddress::create($data);
+
+        // Log IP creation
+        $this->auditLogger->logIpCreated($ip);
 
         return response()->json([
             'success' => true,
@@ -54,7 +59,16 @@ class IpAddressController extends Controller
             $data = $request->only(['label', 'comment']);
         }
 
+        // Capture old values for audit
+        $oldValues = $ip->only(array_keys($data));
+
         $ip->update($data);
+
+        // Capture new values for audit
+        $newValues = $ip->fresh()->only(array_keys($data));
+
+        // Log IP update
+        $this->auditLogger->logIpUpdated($ip, $oldValues, $newValues);
 
         return response()->json([
             'success' => true,
@@ -65,6 +79,9 @@ class IpAddressController extends Controller
     public function delete($id)
     {
         $ip = IpAddress::findOrFail($id);
+
+        // Log IP deletion before soft delete
+        $this->auditLogger->logIpDeleted($ip);
 
         $ip->delete();
 

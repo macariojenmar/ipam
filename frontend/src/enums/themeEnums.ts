@@ -100,16 +100,46 @@ export const COMPONENTS = {
   },
   MuiDialogActions: {
     styleOverrides: {
-      root: ({ theme }: { theme: Theme }) => ({
+      root: () => ({
         padding: 20,
-        borderTop: `1px solid ${theme.palette.divider}`,
       }),
+    },
+  },
+  MuiDialogContent: {
+    defaultProps: {
+      dividers: true,
     },
   },
   MuiMenuItem: {
     styleOverrides: {
       root: {
         fontSize: "14px",
+      },
+    },
+  },
+  MuiPickersInputBase: {
+    styleOverrides: {
+      root: {
+        height: "37px",
+        borderRadius: "8px !important",
+        fontSize: "14px",
+      },
+    },
+  },
+  MuiDatePicker: {
+    defaultProps: {
+      slotProps: {
+        textField: {
+          size: "small",
+          fullWidth: true,
+        },
+        openPickerButton: {
+          sx: {
+            ".MuiSvgIcon-root": {
+              fontSize: "20px",
+            },
+          },
+        },
       },
     },
   },

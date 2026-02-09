@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IpAddressController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -18,6 +20,9 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
+
+    // Dashboard Stats
+    Route::get('dashboard/stats', [DashboardController::class, 'stats']);
 
     // User Management
     Route::prefix('users')->group(function () {
@@ -41,6 +46,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/create', [RolePermissionController::class, 'create'])->middleware('permission:can-view-roles-and-permissions');
         Route::put('/update/{id}', [RolePermissionController::class, 'update'])->middleware('permission:can-view-roles-and-permissions');
     });
+
+    // Audit Logs
+    Route::prefix('audit-logs')->group(function () {
+        Route::get('/', [AuditLogController::class, 'index']);
+        Route::get('/events', [AuditLogController::class, 'events']);
+    })->middleware('permission:can-view-users');
 });
 
 // Public User Registration

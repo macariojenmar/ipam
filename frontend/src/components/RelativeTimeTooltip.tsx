@@ -4,15 +4,21 @@ import { formatDistanceToNow, format, isValid } from "date-fns";
 
 interface RelativeTimeTooltipProps {
   passedDate: string | Date | null | undefined;
+  fontSize?: string | number;
 }
 
 const RelativeTimeTooltip: React.FC<RelativeTimeTooltipProps> = ({
   passedDate,
+  fontSize,
 }) => {
   const date = passedDate ? new Date(passedDate) : null;
 
   if (!date || !isValid(date)) {
-    return <Typography variant="body2">null</Typography>;
+    return (
+      <Typography variant="body2" sx={{ fontSize }}>
+        null
+      </Typography>
+    );
   }
 
   return (
@@ -28,6 +34,7 @@ const RelativeTimeTooltip: React.FC<RelativeTimeTooltipProps> = ({
           borderBottom: "1px dotted",
           display: "inline-block",
           borderColor: "text.secondary",
+          fontSize,
         }}
       >
         {formatDistanceToNow(date, { addSuffix: true })}

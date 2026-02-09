@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Enums\UserStatus;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogger;
+use App\Models\User;
 
 class AuthController extends Controller
 {
+    public function __construct(protected AuditLogger $auditLogger) {}
     public function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
 
         if (! $token = Auth::guard('api')->attempt($credentials)) {
+            // Log failed login attempt
+            $user = User::where('email', $credentials['email'])->first();
+            if ($user) {
+                $this->auditLogger->logLogin($user, false);
+            }
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -27,10 +35,16 @@ class AuthController extends Controller
         if ($user->status !== UserStatus::ACTIVE) {
             Auth::guard('api')->logout();
 
+            // Log failed login due to status
+            $this->auditLogger->logLogin($user, false);
+
             return response()->json([
                 'error' => $statusMessages[$user->status->value] ?? 'Account access denied.'
             ]);
         }
+
+        // Log successful login
+        $this->auditLogger->logLogin($user, true);
 
         return $this->respondWithToken($token);
     }
@@ -42,6 +56,13 @@ class AuthController extends Controller
 
     public function logout()
     {
+        $user = Auth::guard('api')->user();
+
+        // Log logout
+        if ($user) {
+            $this->auditLogger->logLogout($user);
+        }
+
         Auth::guard('api')->logout();
 
         return response()->json(['message' => 'Successfully logged out'])

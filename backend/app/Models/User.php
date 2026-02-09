@@ -11,10 +11,11 @@ use App\Enums\UserStatus;
 use App\Enums\RoleEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\Auditable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, Auditable;
 
     protected $guard_name = 'api';
 

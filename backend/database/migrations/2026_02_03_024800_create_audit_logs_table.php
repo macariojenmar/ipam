@@ -15,15 +15,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->string('session_id')->nullable()->index();
-            $table->string('event'); // login, logout, ip_created, etc.
+            $table->string('event')->index();
             $table->nullableMorphs('auditable');
             $table->json('old_values')->nullable();
             $table->json('new_values')->nullable();
+            $table->text('description')->nullable();
             $table->ipAddress('user_ip')->nullable();
             $table->text('user_agent')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            
-            // Note: No updated_at as audit logs should be immutable.
+
+            $table->index(['user_id', 'created_at']);
         });
     }
 

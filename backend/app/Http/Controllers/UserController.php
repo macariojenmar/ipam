@@ -9,11 +9,12 @@ use App\Http\Requests\Admin\SaveUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use Illuminate\Http\Request;
 use App\Enums\RoleEnum;
-
+use App\Services\AuditLogger;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function __construct(protected AuditLogger $auditLogger) {}
 
     public function index(Request $request)
     {
@@ -59,7 +60,11 @@ class UserController extends Controller
             ], 403);
         }
 
+        $oldStatus = $user->status->value;
         $user->updateStatus($request->status, Auth::id());
+
+        // Log status change
+        $this->auditLogger->logUserStatusChanged($user, $oldStatus, $request->status);
 
         return response()->json([
             'success' => true,
@@ -71,7 +76,11 @@ class UserController extends Controller
     {
         $validated = $request->validated();
 
-        User::createWithRole($validated, $validated['role']);
+        $user = User::createWithRole($validated, $validated['role']);
+
+        // Log user creation
+        $this->auditLogger->logUserCreated($user);
+        $this->auditLogger->logUserRoleChanged($user, [], [$validated['role']]);
 
         return response()->json([
             'success' => true,
@@ -85,7 +94,23 @@ class UserController extends Controller
         $validated = $request->validated();
         $user = User::findOrFail($id);
 
+        // Capture old values for audit
+        $oldValues = $user->only(['name', 'email', 'status']);
+        $oldRoles = $user->getRoleNames()->toArray();
+
         $user->updateWithRole($validated, $validated['role']);
+
+        // Capture new values for audit
+        $newValues = $user->fresh()->only(['name', 'email', 'status']);
+        $newRoles = [$validated['role']];
+
+        // Log user update
+        $this->auditLogger->logUserUpdated($user, $oldValues, $newValues);
+
+        // Log role changes if different
+        if ($oldRoles != $newRoles) {
+            $this->auditLogger->logUserRoleChanged($user, $oldRoles, $newRoles);
+        }
 
         return response()->json([
             'success' => true,

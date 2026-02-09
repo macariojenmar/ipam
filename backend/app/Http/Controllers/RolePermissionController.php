@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Enums\RoleEnum;
+use App\Services\AuditLogger;
 
 class RolePermissionController extends Controller
 {
+    public function __construct(protected AuditLogger $auditLogger) {}
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -51,10 +53,14 @@ class RolePermissionController extends Controller
             'guard_name' => 'api'
         ]);
 
+        // Log permission creation
+        $this->auditLogger->logPermissionCreated($permission);
+
         // Auto-assign to Developer
         $developerRole = Role::where('name', RoleEnum::DEVELOPER->value)->first();
         if ($developerRole) {
             $developerRole->givePermissionTo($permission);
+            $this->auditLogger->logPermissionAssigned($permission, $developerRole);
         }
 
         // Return the same format as index for the grid
@@ -84,8 +90,10 @@ class RolePermissionController extends Controller
 
         if ($request->enabled) {
             $role->givePermissionTo($permission);
+            $this->auditLogger->logPermissionAssigned($permission, $role);
         } else {
             $role->revokePermissionTo($permission);
+            $this->auditLogger->logPermissionRevoked($permission, $role);
         }
 
         return response()->json(['success' => true]);
