@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Chip,
@@ -28,9 +29,7 @@ import ConfirmationDialog from "../components/ConfirmationDialog";
 import IpAddressModal from "../components/IpAddressModal";
 import { UserAvatar } from "../components/UserAvatar";
 import SearchField from "../components/SearchField";
-import {
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useIps } from "../hooks/useIps";
 import { useAuthStore } from "../store/useAuthStore";
 import { CAN_DELETE_IP_ADDRESS } from "../enums/permissionEnums";
@@ -85,8 +84,6 @@ const IpManagementPage = () => {
     ip: null,
     processing: false,
   });
-
-
 
   const handleSaveIp = async (values: IpSaveData) => {
     setIpModal((prev) => ({ ...prev, processing: true }));
@@ -146,30 +143,24 @@ const IpManagementPage = () => {
     setDeleteDialog((prev) => ({ ...prev, processing: false }));
   };
 
-
-
   const columns: GridColDef[] = [
     {
       field: "ip",
       headerName: "IP Address",
       flex: 1,
       renderCell: ({ row }) => (
-        <Stack direction={"row"} gap={1} alignItems={"center"} mt={1.2}>
-          <Box
+        <Stack direction={"row"} gap={1} alignItems={"center"} mt={1}>
+          <Avatar
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 32,
-              height: 32,
-              borderRadius: 1,
+              borderRadius: "12px",
               bgcolor: "primary.main",
-              color: "primary.contrastText",
+              height: 34,
+              width: 34,
             }}
           >
-            <Globe size={18} />
-          </Box>
-          <Typography fontWeight={700} variant="body2" maxWidth={150} noWrap>
+            <Globe size={18} color="#fff" />
+          </Avatar>
+          <Typography fontWeight={700} variant="body2" noWrap>
             {row.ip}
           </Typography>
         </Stack>
