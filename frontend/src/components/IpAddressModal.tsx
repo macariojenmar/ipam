@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import { object, string } from "yup";
-import { type IpAddress, type IpSaveData } from "../services/api";
+import { type IpAddress, type IpSaveData } from "../services/ipService";
 import { Globe, Info, Tag } from "lucide-react";
 import { IP_REGEX } from "../enums/validationEnums";
 

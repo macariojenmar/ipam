@@ -10,23 +10,17 @@ import {
   CircularProgress,
   Link,
 } from "@mui/material";
-import {
-  ArrowLeft,
-  Earth,
-  Mail,
-  CheckCircle,
-  UserRound,
-} from "lucide-react";
+import { ArrowLeft, Earth, Mail, CheckCircle, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { object, string, ref } from "yup";
 import toast from "react-hot-toast";
-import { register, type ApiErrorResponse } from "../services/api";
+import { type ApiErrorResponse } from "../services/api";
+import { register } from "../services/authService";
 import IconWrapper from "../components/IconWrapper";
 import CenteredLayout from "../components/CenteredLayout";
 import PasswordInput from "../components/PasswordInput";
-
 
 const SignUpPage = () => {
   const theme = useTheme();

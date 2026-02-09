@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { object, string } from "yup";
 import toast from "react-hot-toast";
-import { login } from "../services/api";
+import { login } from "../services/authService";
 import IconWrapper from "../components/IconWrapper";
 import CenteredLayout from "../components/CenteredLayout";
 import { useAuthStore } from "../store/useAuthStore";

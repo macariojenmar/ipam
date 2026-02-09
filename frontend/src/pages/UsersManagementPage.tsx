@@ -15,14 +15,14 @@ import {
   type GridColDef,
   type GridPaginationModel,
 } from "@mui/x-data-grid";
+import { type ApiErrorResponse } from "../services/api";
 import {
   updateUserStatus,
   createUser,
   updateUser,
   type UserDetail,
   type UserSaveData,
-  type ApiErrorResponse,
-} from "../services/api";
+} from "../services/userService";
 
 import { toast } from "react-hot-toast";
 import { MainLayout } from "../components/MainLayout";

@@ -12,14 +12,14 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { type ApiErrorResponse } from "../services/api";
 import {
   createIpAddress,
   deleteIpAddress,
+  updateIpAddress,
   type IpAddress,
   type IpSaveData,
-  type ApiErrorResponse,
-  updateIpAddress,
-} from "../services/api";
+} from "../services/ipService";
 import { toast } from "react-hot-toast";
 import { MainLayout } from "../components/MainLayout";
 import PageLabel from "../components/PageLabel";

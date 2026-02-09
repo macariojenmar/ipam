@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import { object, string, ref } from "yup";
-import { type UserDetail, type UserSaveData } from "../services/api";
+import { type UserDetail, type UserSaveData } from "../services/userService";
 import { ACTIVE, PENDING, REJECTED, ARCHIVED } from "../enums/statusEnums";
 import PasswordInput from "./PasswordInput";
 import { generateRandomPassword } from "../utils/stringHelper";

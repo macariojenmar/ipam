@@ -13,7 +13,7 @@ import {
   Grid,
   Tooltip,
 } from "@mui/material";
-import { type AuditLog } from "../services/api";
+import { type AuditLog } from "../services/auditService";
 import { User, Globe, Monitor, Clock } from "lucide-react";
 import dayjs from "dayjs";
 import { getEventIcon } from "../utils/auditUtils";

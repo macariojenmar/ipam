@@ -18,15 +18,11 @@ import { useAuditLogs, useAuditEvents } from "../hooks/useAuditLogs";
 import SearchField from "./SearchField";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Dayjs } from "dayjs";
-import {
-  Hourglass,
-  FolderOpen,
-  Trash2,
-} from "lucide-react";
+import { Hourglass, FolderOpen, Trash2 } from "lucide-react";
 import EmptyState from "./EmptyState";
 import RelativeTimeTooltip from "./RelativeTimeTooltip";
 import AuditLogDetailModal from "./AuditLogDetailModal.tsx";
-import { type AuditLog } from "../services/api";
+import { type AuditLog } from "../services/auditService";
 import { getEventIcon } from "../utils/auditUtils";
 import { useAuthStore } from "../store/useAuthStore";
 import { DEVELOPER } from "../enums/roleEnums";
@@ -56,19 +52,20 @@ const AuditLogsSection = () => {
   const { user } = useAuthStore();
   const isDeveloper = user?.role_names?.includes(DEVELOPER);
 
-  const filteredLogs = auditLogs?.data.filter((log) => {
-    if (isDeveloper) return true;
-    
-    const restrictedEvents = [
-      "user_role_assigned",
-      "user_role_revoked",
-      "permission_created",
-      "permission_assigned_to_role",
-      "permission_revoked_from_role"
-    ];
-    
-    return !restrictedEvents.includes(log.event as string);
-  }) || [];
+  const filteredLogs =
+    auditLogs?.data.filter((log) => {
+      if (isDeveloper) return true;
+
+      const restrictedEvents = [
+        "user_role_assigned",
+        "user_role_revoked",
+        "permission_created",
+        "permission_assigned_to_role",
+        "permission_revoked_from_role",
+      ];
+
+      return !restrictedEvents.includes(log.event as string);
+    }) || [];
 
   const handleClearFilters = () => {
     setSearch("");
@@ -85,11 +82,7 @@ const AuditLogsSection = () => {
 
   return (
     <Card variant="outlined" sx={{ padding: 4 }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack>
           <Typography variant="h6" fontWeight="700">
             Recent Activity
@@ -106,7 +99,7 @@ const AuditLogsSection = () => {
             backgroundColor: alpha(theme.palette.primary.main, 0.1),
             color: theme.palette.primary.main,
             py: 2,
-            px: 1
+            px: 1,
           }}
         />
       </Stack>
@@ -181,10 +174,10 @@ const AuditLogsSection = () => {
           filteredLogs.map((log) => {
             const { icon: EventIcon, color } = getEventIcon(log.event);
             return (
-              <Card 
-                variant="outlined" 
+              <Card
+                variant="outlined"
                 key={`log-key-${log.id}`}
-                sx={{ 
+                sx={{
                   cursor: "pointer",
                   "&:hover": {
                     backgroundColor: alpha(theme.palette.action.hover, 0.04),
@@ -223,10 +216,7 @@ const AuditLogsSection = () => {
                           gap: 1,
                         }}
                       >
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                        >
+                        <Typography variant="caption" color="text.secondary">
                           By {log.user?.name || "System"}
                         </Typography>
                         <Typography variant="caption" color="text.disabled">

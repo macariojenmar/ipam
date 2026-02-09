@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getIps } from "../services/api";
+import { getIps } from "../services/ipService";
 
 export const useIps = (
   page: number,
