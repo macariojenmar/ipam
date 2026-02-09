@@ -38,15 +38,9 @@ export const Footer = () => {
 
           <Stack direction="row" spacing={3}>
             <Link
-              href="#"
-              color="text.secondary"
-              underline="hover"
-              sx={{ fontSize: "14px" }}
-            >
-              Documentation
-            </Link>
-            <Link
-              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://github.com/macariojenmar/ipam"
               color="text.secondary"
               underline="hover"
               sx={{ fontSize: "14px" }}
@@ -54,12 +48,14 @@ export const Footer = () => {
               GitHub
             </Link>
             <Link
-              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://dev-jenmar.vercel.app"
               color="text.secondary"
               underline="hover"
               sx={{ fontSize: "14px" }}
             >
-              API Reference
+              Jenmar Macario
             </Link>
           </Stack>
         </Stack>
