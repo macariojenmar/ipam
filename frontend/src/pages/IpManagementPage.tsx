@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -14,7 +14,6 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import {
   createIpAddress,
   deleteIpAddress,
-  getIps,
   type IpAddress,
   type IpSaveData,
   type ApiErrorResponse,
@@ -29,6 +28,10 @@ import ConfirmationDialog from "../components/ConfirmationDialog";
 import IpAddressModal from "../components/IpAddressModal";
 import { UserAvatar } from "../components/UserAvatar";
 import SearchField from "../components/SearchField";
+import {
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useIps } from "../hooks/useIps";
 import { useAuthStore } from "../store/useAuthStore";
 import { CAN_DELETE_IP_ADDRESS } from "../enums/permissionEnums";
 import { CAN_EDIT_FULL_ROLES } from "../enums/roleEnums";
@@ -36,15 +39,24 @@ import { CAN_EDIT_FULL_ROLES } from "../enums/roleEnums";
 const IpManagementPage = () => {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [ips, setIps] = useState<IpAddress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [totalRows, setTotalRows] = useState(0);
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
   });
+
+  const { data, isLoading: loading } = useIps(
+    paginationModel.page,
+    paginationModel.pageSize,
+    search,
+    typeFilter,
+  );
+
+  const ips = data?.data || [];
+  const totalRows = data?.total || 0;
+
+  const queryClient = useQueryClient();
   const { hasPermission, user } = useAuthStore();
-  const isAdmin = user?.role_names?.some((role) =>
+  const isAdmin = user?.role_names?.some((role: string) =>
     CAN_EDIT_FULL_ROLES.includes(role),
   );
 
@@ -74,26 +86,7 @@ const IpManagementPage = () => {
     processing: false,
   });
 
-  const fetchIps = async (
-    searchTerm: string,
-    type: string,
-    page: number,
-    pageSize: number,
-  ) => {
-    setLoading(true);
-    try {
-      const response = await getIps(page + 1, pageSize, searchTerm, type);
-      if (response.ok && response.data) {
-        setIps(response.data.data);
-        setTotalRows(response.data.total);
-      } else {
-        toast.error("Failed to fetch IP addresses");
-      }
-    } catch (error) {
-      toast.error("An error occurred while fetching IP addresses");
-    }
-    setLoading(false);
-  };
+
 
   const handleSaveIp = async (values: IpSaveData) => {
     setIpModal((prev) => ({ ...prev, processing: true }));
@@ -110,12 +103,7 @@ const IpManagementPage = () => {
         toast.success(
           `IP Address ${values.ip} ${ipModal.ip ? "updated" : "created"} successfully`,
         );
-        fetchIps(
-          search,
-          typeFilter,
-          paginationModel.page,
-          paginationModel.pageSize,
-        );
+        queryClient.invalidateQueries({ queryKey: ["ips"] });
         setIpModal({
           open: false,
           ip: null,
@@ -147,12 +135,7 @@ const IpManagementPage = () => {
       const response = await deleteIpAddress(deleteDialog.ip.id);
       if (response.ok) {
         toast.success("IP Address deleted successfully");
-        fetchIps(
-          search,
-          typeFilter,
-          paginationModel.page,
-          paginationModel.pageSize,
-        );
+        queryClient.invalidateQueries({ queryKey: ["ips"] });
         setDeleteDialog({ open: false, ip: null, processing: false });
       } else {
         toast.error("Failed to delete IP address");
@@ -163,18 +146,7 @@ const IpManagementPage = () => {
     setDeleteDialog((prev) => ({ ...prev, processing: false }));
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchIps(
-        search,
-        typeFilter,
-        paginationModel.page,
-        paginationModel.pageSize,
-      );
-    }, 500);
 
-    return () => clearTimeout(timer);
-  }, [search, typeFilter, paginationModel]);
 
   const columns: GridColDef[] = [
     {
