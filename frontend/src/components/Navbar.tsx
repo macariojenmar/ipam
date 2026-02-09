@@ -100,7 +100,7 @@ export const Navbar = () => {
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                   sx={{
                     "& .MuiMenu-paper": {
-                      width: "170px",
+                      width: "190px",
                     },
                   }}
                 >
@@ -118,6 +118,7 @@ export const Navbar = () => {
                       variant="caption"
                       color="text.secondary"
                       maxWidth={130}
+                      noWrap
                     >
                       {user?.email}
                     </Typography>
