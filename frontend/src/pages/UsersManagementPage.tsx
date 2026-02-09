@@ -44,6 +44,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { CAN_APPROVE_USERS, CAN_REJECT_USERS } from "../enums/permissionEnums";
 import { useUsers } from "../hooks/useUsers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { DEVELOPER } from "../enums/roleEnums";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -67,6 +68,10 @@ const UsersManagementPage = () => {
   });
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [roleFilter, setRoleFilter] = useState<string>("all");
+
+  const { user: currentUser } = useAuthStore();
+  const isDeveloper = currentUser?.role_names.includes(DEVELOPER);
 
   const [userModal, setUserModal] = useState<{
     open: boolean;
@@ -89,14 +94,12 @@ const UsersManagementPage = () => {
     user: null,
     processing: false,
   });
-  const {
-    data: usersData,
-    isLoading: loading,
-  } = useUsers(
+  const { data: usersData, isLoading: loading } = useUsers(
     paginationModel.page,
     paginationModel.pageSize,
     search,
     statusFilter,
+    roleFilter,
   );
 
   const users = usersData?.data || [];
@@ -160,13 +163,15 @@ const UsersManagementPage = () => {
   const handleStatusUpdate = async () => {
     if (!confirmDialog.user) return;
     const newStatus = confirmDialog.type === APPROVED ? ACTIVE : REJECTED;
-    statusUpdateMutation.mutate({ id: confirmDialog.user.id, status: newStatus });
+    statusUpdateMutation.mutate({
+      id: confirmDialog.user.id,
+      status: newStatus,
+    });
   };
 
   const handleSaveUser = async (values: UserSaveData) => {
     saveUserMutation.mutate(values);
   };
-
 
   const columns: GridColDef[] = [
     {
@@ -317,20 +322,33 @@ const UsersManagementPage = () => {
           value={search}
           onChange={setSearch}
         />
-        <TextField
-          size="small"
-          select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          sx={{
-            minWidth: 120,
-          }}
-        >
-          <MenuItem value="all"> All Status</MenuItem>
-          <MenuItem value={PENDING}>Pending</MenuItem>
-          <MenuItem value={ACTIVE}>Active</MenuItem>
-          <MenuItem value={REJECTED}>Rejected</MenuItem>
-        </TextField>
+        <Stack direction={"row"} gap={1}>
+          <TextField
+            size="small"
+            select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            sx={{ minWidth: 120 }}
+          >
+            <MenuItem value="all"> All Status</MenuItem>
+            <MenuItem value={PENDING}>Pending</MenuItem>
+            <MenuItem value={ACTIVE}>Active</MenuItem>
+            <MenuItem value={REJECTED}>Rejected</MenuItem>
+          </TextField>
+
+          <TextField
+            size="small"
+            select
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+            sx={{ minWidth: 140 }}
+          >
+            <MenuItem value="all">All Roles</MenuItem>
+            {isDeveloper && <MenuItem value="Developer">Developer</MenuItem>}
+            <MenuItem value="Super-Admin">Super Admin</MenuItem>
+            <MenuItem value="User">User</MenuItem>
+          </TextField>
+        </Stack>
       </Stack>
       <Box sx={{ height: "62vh" }}>
         <DataGrid

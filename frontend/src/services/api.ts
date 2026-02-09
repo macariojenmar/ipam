@@ -97,12 +97,14 @@ export const getUsers = async (
   perPage: number = 10,
   search?: string,
   status?: string,
+  role?: string,
 ) => {
   return api.get<PaginatedResponse<UserDetail>>("/users", {
     page,
     per_page: perPage,
     search,
     status,
+    role,
   });
 };
 

@@ -87,6 +87,17 @@ class User extends Authenticatable implements JWTSubject
         return $query;
     }
 
+    public function scopeFilterByRole($query, ?string $role)
+    {
+        if ($role && $role !== 'all') {
+            $query->whereHas('roles', function ($q) use ($role) {
+                $q->where('name', $role);
+            });
+        }
+
+        return $query;
+    }
+
     public static function register(array $data)
     {
         DB::transaction(function () use ($data, &$user) {

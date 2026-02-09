@@ -19,11 +19,12 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->query('per_page', 10);
-        $filters = $request->only(['status', 'search']);
+        $filters = $request->only(['status', 'search', 'role']);
 
         $query = User::with('roles:id,name')
             ->search($filters['search'] ?? null)
-            ->filterByStatus($filters['status'] ?? null);
+            ->filterByStatus($filters['status'] ?? null)
+            ->filterByRole($filters['role'] ?? null);
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
