@@ -9,10 +9,11 @@ import {
 } from "@mui/material";
 import { Users, Globe, UserCheck } from "lucide-react";
 import { useDashboardStats } from "../hooks/useDashboardStats";
+import { formatNumberCompact } from "../utils/stringHelper";
 
 interface StatCardProps {
   title: string;
-  value: string | number;
+  value: number;
   icon: React.ElementType;
   color: string;
   loading?: boolean;
@@ -69,7 +70,7 @@ const StatCard = ({
         <Skeleton variant="text" width="60%" height={48} />
       ) : (
         <Typography variant="h3" fontWeight="700">
-          {value}
+          {formatNumberCompact(value)}
         </Typography>
       )}
     </Card>
