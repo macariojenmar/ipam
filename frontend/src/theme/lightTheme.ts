@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material";
 import {
+  COLOR_PALETTE,
   COMPONENTS,
   LIGHT,
   PRIMARY_COLOR,
@@ -16,6 +17,7 @@ const lightTheme = createTheme({
       default: "#FAFAF9",
       paper: "#FFFF",
     },
+    ...COLOR_PALETTE,
   },
   typography: { ...TYPOGRAPHY },
   components: {

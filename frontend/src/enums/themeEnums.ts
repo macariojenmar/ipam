@@ -8,6 +8,15 @@ export const TYPOGRAPHY = {
   fontFamily: ["Poppins", "sans-serif"].join(","),
 };
 
+export const COLOR_PALETTE = {
+  success: {
+    main: "#37BC7D",
+  },
+  warning: {
+    main: "#FE9A37",
+  },
+};
+
 export const COMPONENTS = {
   MuiTextField: {
     styleOverrides: {
