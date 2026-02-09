@@ -39,7 +39,7 @@ const RolesPermissionsPage = () => {
   });
 
   const roles: string[] = [DEVELOPER, SUPER_ADMIN, USER];
-  const { data: permissionsData, isLoading: loading } = usePermissions(
+  const { data: permissionsData, isFetching: loading } = usePermissions(
     paginationModel.page,
     paginationModel.pageSize,
     search,

@@ -44,7 +44,7 @@ const IpManagementPage = () => {
     pageSize: 10,
   });
 
-  const { data, isLoading: loading } = useIps(
+  const { data, isFetching: loading } = useIps(
     paginationModel.page,
     paginationModel.pageSize,
     search,

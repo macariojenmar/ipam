@@ -94,7 +94,7 @@ const UsersManagementPage = () => {
     user: null,
     processing: false,
   });
-  const { data: usersData, isLoading: loading } = useUsers(
+  const { data: usersData, isFetching: loading } = useUsers(
     paginationModel.page,
     paginationModel.pageSize,
     search,
