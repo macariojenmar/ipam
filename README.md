@@ -242,5 +242,4 @@ The view below shows the Developer perspective, which includes access to all pag
 ## Profile
 
 <img width="1920" height="1032" alt="2026-02-10_11-41-52" src="https://github.com/user-attachments/assets/74b641ca-ffeb-424d-a36b-cb2dee4f12a1" />
-<img width="1920" height="1032" alt="2026-02-10_11-41-38" src="https://github.com/user-attachments/assets/42e24bc9-a312-4e29-987d-ce92b52ee0a2" />
-
+<img width="1920" height="1032" alt="2026-02-10_11-42-00" src="https://github.com/user-attachments/assets/59366f43-a33b-401d-84fb-8931d57e7e91" />
