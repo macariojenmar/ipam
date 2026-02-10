@@ -218,8 +218,9 @@ The view below shows the Developer perspective, which includes access to all pag
 
 ## Dashboard
 
-<img width="1920" height="1032" alt="2026-02-10_11-27-10" src="https://github.com/user-attachments/assets/974f7343-8f18-4695-a4a9-6ca7771c7aff" />
+<img width="1920" height="1032" alt="2026-02-10_13-52-47" src="https://github.com/user-attachments/assets/444543e7-9837-425c-8c7a-d50bf93b08fe" />
 <img width="1920" height="1032" alt="2026-02-10_11-34-15" src="https://github.com/user-attachments/assets/78070111-ef9e-4e65-9028-b03119ab8477" />
+<img width="1920" height="1032" alt="2026-02-10_13-54-24" src="https://github.com/user-attachments/assets/179182af-f00f-47ff-af46-0dfd09cab2fc" />
 
 ## IP Management
 
