@@ -7,6 +7,7 @@ import {
   Divider,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import { Logo } from "../Logo";
 
 export const Footer = () => {
   return (
@@ -32,13 +33,22 @@ export const Footer = () => {
             spacing={4}
           >
             <Box>
-              <Typography
-                variant="h4"
-                textAlign={{ xs: "center", md: "left" }}
-                sx={{ fontWeight: 800, color: "primary.main", mb: 1 }}
+              <Stack
+                direction="row"
+                alignItems="center"
+                gap={1}
+                justifyContent={{ xs: "center", md: "start" }}
+                mb={1}
               >
-                IPlytics.io
-              </Typography>
+                <Logo size={42} />
+                <Typography
+                  variant="h4"
+                  textAlign={{ xs: "center", md: "left" }}
+                  sx={{ fontWeight: 800, color: "primary.main" }}
+                >
+                  IPlytics.io
+                </Typography>
+              </Stack>
               <Typography variant="body2" color="text.secondary">
                 Modern IP Address Management for Everyone.
               </Typography>

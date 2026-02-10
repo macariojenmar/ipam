@@ -11,7 +11,7 @@ import {
   Link,
   Divider,
 } from "@mui/material";
-import { ArrowLeft, Earth, Mail, CheckCircle, UserRound } from "lucide-react";
+import { ArrowLeft, Mail, CheckCircle, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -19,9 +19,9 @@ import { object, string, ref } from "yup";
 import toast from "react-hot-toast";
 import { type ApiErrorResponse } from "../services/api";
 import { register } from "../services/authService";
-import IconWrapper from "../components/IconWrapper";
 import CenteredLayout from "../components/CenteredLayout";
 import PasswordInput from "../components/PasswordInput";
+import { Logo } from "../components/Logo";
 
 const SignUpPage = () => {
   const theme = useTheme();
@@ -83,9 +83,7 @@ const SignUpPage = () => {
             }}
           >
             <Stack spacing={1} alignItems="center">
-              <IconWrapper>
-                <CheckCircle size={32} color={theme.palette.primary.main} />
-              </IconWrapper>
+              <CheckCircle size={32} color={theme.palette.primary.main} />
               <Typography variant="h4" fontWeight="bold" gutterBottom>
                 Registration Successful!
               </Typography>
@@ -130,9 +128,7 @@ const SignUpPage = () => {
             Home
           </Button>
           <Stack spacing={3} alignItems="center" mt={3}>
-            <IconWrapper>
-              <Earth size={32} color={theme.palette.primary.main} />
-            </IconWrapper>
+            <Logo size={60} />
 
             <Box>
               <Typography variant="h4" fontWeight="bold" textAlign="center">

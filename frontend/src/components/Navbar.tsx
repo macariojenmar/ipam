@@ -16,13 +16,14 @@ import {
 } from "@mui/material";
 import { GLOBAL_X_MARGIN } from "../enums/themeEnums";
 import { ThemeSwitch } from "./ThemeSwitch";
-import { Earth, LogOut, UserRound } from "lucide-react";
+import { LogOut, UserRound } from "lucide-react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { Fragment, useState } from "react";
 import { logout as apiLogout } from "../services/authService";
 import toast from "react-hot-toast";
 import { UserAvatar } from "./UserAvatar";
+import { Logo } from "./Logo";
 
 export const Navbar = () => {
   const theme = useTheme();
@@ -76,7 +77,7 @@ export const Navbar = () => {
           sx={{ flexGrow: 1, minWidth: 120 }}
           gap={1}
         >
-          <Earth size={22} strokeWidth={2.2} />
+          <Logo size={34} />
           <Typography
             onClick={() => navigate("/")}
             variant="h6"

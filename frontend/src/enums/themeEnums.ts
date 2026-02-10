@@ -48,7 +48,7 @@ export const COMPONENTS = {
   MuiButton: {
     styleOverrides: {
       root: {
-        borderRadius: 12,
+        borderRadius: 8,
         boxShadow: "none",
         textTransform: "capitalize",
         minWidth: 90,

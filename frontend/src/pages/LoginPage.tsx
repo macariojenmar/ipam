@@ -11,16 +11,16 @@ import {
   Link,
   Divider,
 } from "@mui/material";
-import { ArrowLeft, Earth, Mail } from "lucide-react";
+import { ArrowLeft, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { object, string } from "yup";
 import toast from "react-hot-toast";
 import { login } from "../services/authService";
-import IconWrapper from "../components/IconWrapper";
 import CenteredLayout from "../components/CenteredLayout";
 import { useAuthStore } from "../store/useAuthStore";
 import PasswordInput from "../components/PasswordInput";
+import { Logo } from "../components/Logo";
 
 const LoginPage = () => {
   const theme = useTheme();
@@ -73,9 +73,7 @@ const LoginPage = () => {
             Home
           </Button>
           <Stack spacing={3} alignItems="center" mt={3}>
-            <IconWrapper>
-              <Earth size={32} color={theme.palette.primary.main} />
-            </IconWrapper>
+            <Logo size={60} />
 
             <Box>
               <Typography variant="h4" fontWeight="bold">
