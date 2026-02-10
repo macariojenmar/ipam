@@ -8,6 +8,32 @@ import {
   Stack,
 } from "@mui/material";
 import { Shield, Zap, Search, Users, Activity, Layers } from "lucide-react";
+import { motion } from "framer-motion";
+
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+const MotionCard = motion.create(Card);
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
 
 const features = [
   {
@@ -52,7 +78,14 @@ export const Features = () => {
   return (
     <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "background.default" }}>
       <Container maxWidth="lg">
-        <Box textAlign="center" mb={8}>
+        <MotionBox
+          textAlign="center"
+          mb={8}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <Typography
             variant="h2"
             sx={{
@@ -70,12 +103,20 @@ export const Features = () => {
           >
             Everything you need to manage your IP infrastructure in one place.
           </Typography>
-        </Box>
+        </MotionBox>
 
-        <Grid container spacing={3}>
+        <MotionGrid
+          container
+          spacing={3}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {features.map((feature, index) => (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-              <Card
+              <MotionCard
+                variants={itemVariants}
                 variant="outlined"
                 sx={{
                   height: "100%",
@@ -118,10 +159,10 @@ export const Features = () => {
                     </Typography>
                   </Stack>
                 </CardContent>
-              </Card>
+              </MotionCard>
             </Grid>
           ))}
-        </Grid>
+        </MotionGrid>
       </Container>
     </Box>
   );

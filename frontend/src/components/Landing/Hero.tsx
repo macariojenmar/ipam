@@ -1,5 +1,10 @@
 import { Box, Typography, Button, Container, Stack } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import { motion } from "framer-motion";
+import { DARK } from "../../enums/themeEnums";
+
+const MotionStack = motion.create(Stack);
+const MotionTypography = motion.create(Typography);
 
 export const Hero = () => {
   return (
@@ -8,14 +13,21 @@ export const Hero = () => {
         pt: { xs: 8, md: 15 },
         pb: { xs: 8, md: 12 },
         background: (theme) =>
-          theme.palette.mode === "dark"
+          theme.palette.mode === DARK
             ? "linear-gradient(180deg, rgba(97, 95, 255, 0.05) 0%, rgba(97, 95, 255, 0) 100%)"
             : "linear-gradient(180deg, rgba(97, 95, 255, 0.03) 0%, rgba(97, 95, 255, 0) 100%)",
       }}
     >
       <Container maxWidth="lg">
-        <Stack spacing={4} alignItems="center" textAlign="center">
-          <Typography
+        <MotionStack
+          spacing={4}
+          alignItems="center"
+          textAlign="center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <MotionTypography
             variant="h1"
             sx={{
               fontWeight: 800,
@@ -23,23 +35,35 @@ export const Hero = () => {
               letterSpacing: "-0.02em",
               lineHeight: 1.1,
             }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
             Manage Your IP Space <br />
             <Box component="span" sx={{ color: "primary.main" }}>
               With Absolute Precision
             </Box>
-          </Typography>
+          </MotionTypography>
 
-          <Typography
+          <MotionTypography
             variant="h6"
             color="text.secondary"
             sx={{ maxWidth: 600, mx: "auto", fontWeight: 400 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
             The modern IP Address Management (IPAM) solution designed for speed,
             security, and seamless collaboration across your infrastructure.
-          </Typography>
+          </MotionTypography>
 
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+          <MotionStack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
             <Button
               component={RouterLink}
               to="/login"
@@ -58,8 +82,8 @@ export const Hero = () => {
             >
               Create Account
             </Button>
-          </Stack>
-        </Stack>
+          </MotionStack>
+        </MotionStack>
       </Container>
     </Box>
   );
