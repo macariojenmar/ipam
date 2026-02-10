@@ -206,4 +206,35 @@ class AuditLogger
             "User '{$user->name}' logged out"
         );
     }
+
+    public function logProfileUpdated(User $user, array $oldValues, array $newValues): AuditLog
+    {
+        $changes = [];
+        foreach ($newValues as $key => $value) {
+            if (isset($oldValues[$key]) && $oldValues[$key] !== $value) {
+                $changes[] = $key;
+            }
+        }
+
+        $changesStr = implode(', ', $changes);
+
+        return $this->log(
+            AuditEvent::PROFILE_UPDATED,
+            $user,
+            $oldValues,
+            $newValues,
+            "User '{$user->name}' updated their profile: {$changesStr}"
+        );
+    }
+
+    public function logPasswordUpdated(User $user): AuditLog
+    {
+        return $this->log(
+            AuditEvent::PASSWORD_UPDATED,
+            $user,
+            null,
+            null,
+            "User '{$user->name}' changed their password"
+        );
+    }
 }

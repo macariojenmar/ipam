@@ -80,7 +80,11 @@ class AuthController extends Controller
     public function updateProfile(UpdateProfileRequest $request)
     {
         $user = Auth::guard('api')->user();
+        $oldValues = $user->only(['name', 'email']);
         $user->update($request->validated());
+        $newValues = $user->only(['name', 'email']);
+
+        $this->auditLogger->logProfileUpdated($user, $oldValues, $newValues);
 
         return response()->json([
             'success' => true,
@@ -103,6 +107,8 @@ class AuthController extends Controller
         $user->update([
             'password' => Hash::make($request->new_password)
         ]);
+
+        $this->auditLogger->logPasswordUpdated($user);
 
         return response()->json([
             'success' => true,

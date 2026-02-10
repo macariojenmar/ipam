@@ -27,6 +27,8 @@ enum AuditEvent: string
     case LOGIN_SUCCESS = 'login_success';
     case LOGIN_FAILED = 'login_failed';
     case LOGOUT = 'logout';
+    case PROFILE_UPDATED = 'profile_updated';
+    case PASSWORD_UPDATED = 'password_updated';
 
     public function description(): string
     {
@@ -50,6 +52,8 @@ enum AuditEvent: string
             self::LOGIN_SUCCESS => 'Successful login',
             self::LOGIN_FAILED => 'Failed login attempt',
             self::LOGOUT => 'User logged out',
+            self::PROFILE_UPDATED => 'User profile updated',
+            self::PASSWORD_UPDATED => 'User password changed',
         };
     }
 
