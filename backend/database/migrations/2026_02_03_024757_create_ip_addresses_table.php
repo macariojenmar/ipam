@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ip_addresses', function (Blueprint $table) {
             $table->id();
             $table->string('ip');
+            $table->string('type')->comment('IPv4 or IPv6');
             $table->string('label');
             $table->text('comment')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
