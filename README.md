@@ -197,3 +197,50 @@ docker-compose logs -f backend
 ├── docker-compose.yml  # Docker orchestration
 └── README.md
 ```
+
+## 👀 Preview (Developer View – Full Permissions)
+Some roles, such as Super Admin and Regular User, have limited permissions that restrict the pages they can access.
+The view below shows the Developer perspective, which includes access to all pages, to give you a complete overview of the system.
+
+## Landing Page
+
+<img width="1920" height="1032" alt="2026-02-10_11-42-53" src="https://github.com/user-attachments/assets/2e9951e7-6b4e-4ee7-8668-5fdf8275c6ea" />
+<img width="1920" height="1032" alt="2026-02-10_11-43-05" src="https://github.com/user-attachments/assets/7c7593dd-c126-4cb2-9ee0-aeb94861561e" />
+<img width="1920" height="1032" alt="2026-02-10_11-43-19" src="https://github.com/user-attachments/assets/e46de354-6f26-460f-afff-f51d08fa4408" />
+
+## Login
+
+<img width="1920" height="1032" alt="2026-02-10_11-42-25" src="https://github.com/user-attachments/assets/974e8319-59a8-4bde-989d-a9ca9955487d" />
+
+## Sign up
+
+<img width="1920" height="1032" alt="2026-02-10_11-42-33" src="https://github.com/user-attachments/assets/d5fbf167-b9ab-44d2-bb7a-92d2c0d5ea9e" />
+
+## Dashboard
+
+<img width="1920" height="1032" alt="2026-02-10_11-27-10" src="https://github.com/user-attachments/assets/974f7343-8f18-4695-a4a9-6ca7771c7aff" />
+<img width="1920" height="1032" alt="2026-02-10_11-34-15" src="https://github.com/user-attachments/assets/78070111-ef9e-4e65-9028-b03119ab8477" />
+
+## IP Management
+
+<img width="1920" height="1032" alt="2026-02-10_11-38-07" src="https://github.com/user-attachments/assets/bb558b86-1368-43cc-bb80-1c002cc7258e" />
+<img width="1920" height="1032" alt="2026-02-10_11-38-41" src="https://github.com/user-attachments/assets/43d454db-a983-4867-9107-58307cf5fb7a" />
+<img width="1920" height="1032" alt="2026-02-10_11-39-00" src="https://github.com/user-attachments/assets/39ddbc48-84a5-4e97-89e4-593924147111" />
+
+## User Management
+
+<img width="1920" height="1032" alt="2026-02-10_11-39-51" src="https://github.com/user-attachments/assets/b26d5832-0770-4997-a746-5500c99a3381" />
+<img width="1920" height="1032" alt="2026-02-10_11-40-06" src="https://github.com/user-attachments/assets/e0992cc5-4497-4c7d-b52e-89bb60152047" />
+<img width="1920" height="1032" alt="2026-02-10_11-40-47" src="https://github.com/user-attachments/assets/22cfba90-86fe-4485-9406-5b75e1a5c783" />
+<img width="1920" height="1032" alt="2026-02-10_11-40-21" src="https://github.com/user-attachments/assets/4d6fe0e9-dd68-4125-be7a-a0001361c2d9" />
+
+## Roles and Permissions
+
+<img width="1920" height="1032" alt="2026-02-10_11-41-23" src="https://github.com/user-attachments/assets/f2d4d60b-1300-4175-bba5-63a07241b898" />
+<img width="1920" height="1032" alt="2026-02-10_11-41-38" src="https://github.com/user-attachments/assets/31efc3b7-e203-428e-b4d8-c688f86b695e" />
+
+## Profile
+
+<img width="1920" height="1032" alt="2026-02-10_11-41-52" src="https://github.com/user-attachments/assets/74b641ca-ffeb-424d-a36b-cb2dee4f12a1" />
+<img width="1920" height="1032" alt="2026-02-10_11-41-38" src="https://github.com/user-attachments/assets/42e24bc9-a312-4e29-987d-ce92b52ee0a2" />
+
