@@ -78,6 +78,7 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
 - **UI Library:** [Material UI (MUI)](https://mui.com/material-ui/)
 - **State Management:** [Zustand](https://zustand-demo.pmnd.rs/)
 - **Data Fetching:** [TanStack Query v5](https://tanstack.com/query/latest) (React Query)
+- **Animations:** [Framer Motion](https://www.framer.com/motion/)
 
 ---
 
@@ -100,6 +101,7 @@ A Dockerized full-stack application for IP Address Management (IPAM) featuring a
 - `zustand`: Lightweight global state management
 - `react-hot-toast`: Beautiful, responsive notifications
 - `lucide-react`: Modern and consistent icons
+- `framer-motion`: Production-ready motion library for React
 - `apisauce`: Lightweight wrapper for Axios with standardized responses
 
 ---

@@ -11,6 +11,8 @@ import {
   Tooltip,
   Typography,
   Grid,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { type ApiErrorResponse } from "../services/api";
@@ -35,6 +37,7 @@ import { useIps } from "../hooks/useIps";
 import { useAuthStore } from "../store/useAuthStore";
 import { CAN_DELETE_IP_ADDRESS } from "../enums/permissionEnums";
 import { CAN_EDIT_FULL_ROLES } from "../enums/roleEnums";
+import { IpMobileView } from "../components/mobile/IpMobileView";
 
 const IpManagementPage = () => {
   const [search, setSearch] = useState("");
@@ -59,6 +62,8 @@ const IpManagementPage = () => {
   const totalRows = data?.total || 0;
 
   const queryClient = useQueryClient();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { hasPermission, user } = useAuthStore();
   const isAdmin = user?.role_names?.some((role: string) =>
     CAN_EDIT_FULL_ROLES.includes(role),
@@ -317,18 +322,41 @@ const IpManagementPage = () => {
         </Grid>
       </Grid>
       <Box sx={{ height: "62vh" }}>
-        <DataGrid
-          rows={ips}
-          columns={columns}
-          loading={loading}
-          disableRowSelectionOnClick
-          getRowId={(row) => row.id}
-          paginationMode="server"
-          rowCount={totalRows}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[5, 10, 25, 50]}
-        />
+        {isMobile ? (
+          <IpMobileView
+            ips={ips}
+            loading={loading}
+            totalRows={totalRows}
+            paginationModel={paginationModel}
+            setPaginationModel={setPaginationModel}
+            onEdit={(ip) =>
+              setIpModal({
+                open: true,
+                ip,
+                processing: false,
+                canEditFull: canEdit(ip.user_id),
+              })
+            }
+            onDelete={(ip) =>
+              setDeleteDialog({ open: true, ip, processing: false })
+            }
+            hasPermission={hasPermission}
+            canEdit={canEdit}
+          />
+        ) : (
+          <DataGrid
+            rows={ips}
+            columns={columns}
+            loading={loading}
+            disableRowSelectionOnClick
+            getRowId={(row) => row.id}
+            paginationMode="server"
+            rowCount={totalRows}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[5, 10, 25, 50]}
+          />
+        )}
       </Box>
 
       <IpAddressModal

@@ -8,6 +8,7 @@ import {
   alpha,
   useTheme,
   Grid,
+  useMediaQuery,
 } from "@mui/material";
 import {
   DataGrid,
@@ -28,9 +29,11 @@ import {
 import { usePermissions } from "../hooks/usePermissions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DEVELOPER, SUPER_ADMIN, USER } from "../enums/roleEnums";
+import { PermissionMobileView } from "../components/mobile/PermissionMobileView";
 
 const RolesPermissionsPage = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const queryClient = useQueryClient();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -219,25 +222,37 @@ const RolesPermissionsPage = () => {
       </Grid>
 
       <Box sx={{ height: "62vh", width: "100%" }}>
-        <DataGrid
-          rows={permissions}
-          columns={columns}
-          loading={loading}
-          rowCount={totalRows}
-          paginationMode="server"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[10, 25, 50]}
-          disableRowSelectionOnClick
-          disableColumnMenu
-          sx={{
-            border: `1px solid ${theme.palette.divider}`,
-            borderRadius: 2,
-            "& .MuiDataGrid-columnHeaders": {
-              bgcolor: alpha(theme.palette.primary.main, 0.05),
-            },
-          }}
-        />
+        {isMobile ? (
+          <PermissionMobileView
+            permissions={permissions}
+            loading={loading}
+            totalRows={totalRows}
+            paginationModel={paginationModel}
+            setPaginationModel={setPaginationModel}
+            roles={roles}
+            handleToggle={handleToggle}
+          />
+        ) : (
+          <DataGrid
+            rows={permissions}
+            columns={columns}
+            loading={loading}
+            rowCount={totalRows}
+            paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[10, 25, 50]}
+            disableRowSelectionOnClick
+            disableColumnMenu
+            sx={{
+              border: `1px solid ${theme.palette.divider}`,
+              borderRadius: 2,
+              "& .MuiDataGrid-columnHeaders": {
+                bgcolor: alpha(theme.palette.primary.main, 0.05),
+              },
+            }}
+          />
+        )}
       </Box>
 
       <PermissionModal

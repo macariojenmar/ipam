@@ -10,6 +10,8 @@ import {
   Tooltip,
   Typography,
   Grid,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   DataGrid,
@@ -34,7 +36,6 @@ import {
   ACTIVE,
   PENDING,
   REJECTED,
-  ARCHIVED,
   APPROVED,
 } from "../enums/statusEnums";
 import { Check, Pencil, Plus, X, RefreshCcw } from "lucide-react";
@@ -46,22 +47,13 @@ import { CAN_APPROVE_USERS, CAN_REJECT_USERS } from "../enums/permissionEnums";
 import { useUsers } from "../hooks/useUsers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DEVELOPER } from "../enums/roleEnums";
+import { UserMobileView } from "../components/mobile/UserMobileView";
+import { getStatusColor } from "../utils/statusUtils";
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case ACTIVE:
-      return "success";
-    case PENDING:
-      return "warning";
-    case REJECTED:
-    case ARCHIVED:
-      return "error";
-    default:
-      return "default";
-  }
-};
 
 const UsersManagementPage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { hasPermission } = useAuthStore();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
@@ -363,17 +355,47 @@ const UsersManagementPage = () => {
         </Grid>
       </Grid>
       <Box sx={{ height: "62vh" }}>
-        <DataGrid
-          rows={users}
-          columns={columns}
-          rowCount={totalRows}
-          loading={loading}
-          pageSizeOptions={[5, 10, 25, 50]}
-          paginationModel={paginationModel}
-          paginationMode="server"
-          onPaginationModelChange={setPaginationModel}
-          disableRowSelectionOnClick
-        />
+        {isMobile ? (
+          <UserMobileView
+            users={users}
+            loading={loading}
+            totalRows={totalRows}
+            paginationModel={paginationModel}
+            setPaginationModel={setPaginationModel}
+            onEdit={(user) =>
+              setUserModal({ open: true, user, processing: false })
+            }
+            onApprove={(user) =>
+              setConfirmDialog({
+                open: true,
+                type: APPROVED,
+                user,
+                processing: false,
+              })
+            }
+            onReject={(user) =>
+              setConfirmDialog({
+                open: true,
+                type: REJECTED,
+                user,
+                processing: false,
+              })
+            }
+            hasPermission={hasPermission}
+          />
+        ) : (
+          <DataGrid
+            rows={users}
+            columns={columns}
+            rowCount={totalRows}
+            loading={loading}
+            pageSizeOptions={[5, 10, 25, 50]}
+            paginationModel={paginationModel}
+            paginationMode="server"
+            onPaginationModelChange={setPaginationModel}
+            disableRowSelectionOnClick
+          />
+        )}
       </Box>
 
       <ConfirmationDialog
