@@ -111,7 +111,7 @@ const AuditLogsSection = () => {
       </Stack>
       <Divider sx={{ my: 2 }} />
       <Grid container spacing={2} mb={2}>
-        <Grid size={{ xs: 12, md: 4, lg: 5 }}>
+        <Grid size={{ xs: 12, md: 5 }}>
           <SearchField
             placeholder="Search logs or users"
             value={search}
@@ -121,68 +121,57 @@ const AuditLogsSection = () => {
             }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3.5 }}>
-          <TextField
-            fullWidth
-            select
-            size="small"
-            value={eventType}
-            onChange={(e) => {
-              setEventType(e.target.value);
-              setPage(0);
-            }}
-          >
-            <MenuItem value="all">All Events</MenuItem>
-            {events?.map((e) => (
-              <MenuItem key={e.value} value={e.value}>
-                {e.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2, lg: 1.5 }}>
-          <DatePicker
-            slotProps={{ textField: { fullWidth: true, size: "small" } }}
-            label="Start Date"
-            value={startDate}
-            onChange={(newValue) => {
-              setStartDate(newValue);
-              setPage(0);
-            }}
-            format="MMM DD, YYYY"
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2, lg: 1.5 }}>
-          <DatePicker
-            slotProps={{ textField: { fullWidth: true, size: "small" } }}
-            label="End Date"
-            value={endDate}
-            onChange={(newValue) => {
-              setEndDate(newValue);
-              setPage(0);
-            }}
-            format="MMM DD, YYYY"
-          />
-        </Grid>
-        {(search || eventType !== "all" || startDate || endDate) && (
-          <Grid size={{ xs: 12, sm: "auto" }}>
-            <Tooltip title="Clear Filters">
+        <Grid size={{ xs: 12, md: 7 }}>
+          <Stack spacing={{ xs: 2, md: 1 }} direction={{ xs: "column", md: "row" }} width={"100%"}>
+            <TextField
+              fullWidth
+              select
+              size="small"
+              value={eventType}
+              onChange={(e) => {
+                setEventType(e.target.value);
+                setPage(0);
+              }}
+            >
+              <MenuItem value="all">All Events</MenuItem>
+              {events?.map((e) => (
+                <MenuItem key={e.value} value={e.value}>
+                  {e.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <DatePicker
+              slotProps={{ textField: { fullWidth: true, size: "small" } }}
+              label="Start Date"
+              value={startDate}
+              onChange={(newValue) => {
+                setStartDate(newValue);
+                setPage(0);
+              }}
+              format="MMM DD, YYYY"
+            />
+            <DatePicker
+              slotProps={{ textField: { fullWidth: true, size: "small" } }}
+              label="End Date"
+              value={endDate}
+              onChange={(newValue) => {
+                setEndDate(newValue);
+                setPage(0);
+              }}
+              format="MMM DD, YYYY"
+            />
+            {(search || eventType !== "all" || startDate || endDate) && (
               <Button
-                fullWidth
+                size="small"
                 variant="outlined"
-                color="error"
                 onClick={handleClearFilters}
                 startIcon={<Trash2 size={18} />}
-                sx={{
-                  height: { xs: "50px", sm: "40px" },
-                  textTransform: "none",
-                }}
               >
-                Clear Filters
+                Clear
               </Button>
-            </Tooltip>
-          </Grid>
-        )}
+            )}
+          </Stack>
+        </Grid>
       </Grid>
 
       <Stack spacing={2}>
