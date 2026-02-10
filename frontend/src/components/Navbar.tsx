@@ -77,7 +77,11 @@ export const Navbar = () => {
           gap={1}
         >
           <Earth size={22} strokeWidth={2.2} />
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+          <Typography
+            onClick={() => navigate("/")}
+            variant="h6"
+            sx={{ fontWeight: "bold", cursor: "pointer" }}
+          >
             IPlytics.io
           </Typography>
         </Stack>
