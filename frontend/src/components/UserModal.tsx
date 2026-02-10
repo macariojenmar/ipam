@@ -225,13 +225,15 @@ const UserModal = ({
             />
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} variant="outlined">
+        <DialogActions sx={{ flexDirection: { xs: "column-reverse", sm: "row" }, gap: { xs: 1, sm: 0 }, p: 3 }}>
+          <Button onClick={onClose} variant="outlined" fullWidth sx={{ width: { sm: "auto" } }}>
             Cancel
           </Button>
           <Button
             type="submit"
             variant="contained"
+            fullWidth
+            sx={{ width: { sm: "auto" } }}
             disabled={loading || !formik.dirty}
             startIcon={
               loading ? <CircularProgress size={20} color="inherit" /> : null

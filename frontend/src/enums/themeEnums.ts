@@ -155,7 +155,9 @@ export const COMPONENTS = {
 };
 
 export const GLOBAL_X_MARGIN = {
-  xs: 1,
-  md: 10,
-  lg: 20,
+  xs: 2,
+  sm: 3,
+  md: 6,
+  lg: 12,
+  xl: 20,
 };

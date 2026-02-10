@@ -9,6 +9,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Grid,
 } from "@mui/material";
 import {
   DataGrid,
@@ -313,55 +314,54 @@ const UsersManagementPage = () => {
           <Button
             variant="contained"
             startIcon={<Plus size={22} />}
+            fullWidth
             onClick={() =>
               setUserModal({ open: true, user: null, processing: false })
             }
+            sx={{ width: { xs: "100%", md: "auto" } }}
           >
             Add New User
           </Button>
         </Stack>
       </PageLabel>
 
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        mb={2}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <SearchField
-          placeholder="Search for name or email"
-          value={search}
-          onChange={setSearch}
-        />
-        <Stack direction={"row"} gap={1}>
-          <TextField
-            size="small"
-            select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            sx={{ minWidth: 120 }}
-          >
-            <MenuItem value="all"> All Status</MenuItem>
-            <MenuItem value={PENDING}>Pending</MenuItem>
-            <MenuItem value={ACTIVE}>Active</MenuItem>
-            <MenuItem value={REJECTED}>Rejected</MenuItem>
-          </TextField>
-
-          <TextField
-            size="small"
-            select
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-            sx={{ minWidth: 140 }}
-          >
-            <MenuItem value="all">All Roles</MenuItem>
-            {isDeveloper && <MenuItem value="Developer">Developer</MenuItem>}
-            <MenuItem value="Super-Admin">Super Admin</MenuItem>
-            <MenuItem value="User">User</MenuItem>
-          </TextField>
-        </Stack>
-      </Stack>
+      <Grid container spacing={2} mb={2} justifyContent={"space-between"}>
+        <Grid size={{ xs: 12, md: 9 }}>
+          <SearchField
+            placeholder="Search for name or email"
+            value={search}
+            onChange={setSearch}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, md: 3 }}>
+          <Stack direction={{ xs: "column", md: "row" }} gap={{ xs: 2, md: 1 }}>
+            <TextField
+              fullWidth
+              size="small"
+              select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <MenuItem value="all"> All Status</MenuItem>
+              <MenuItem value={PENDING}>Pending</MenuItem>
+              <MenuItem value={ACTIVE}>Active</MenuItem>
+              <MenuItem value={REJECTED}>Rejected</MenuItem>
+            </TextField>
+            <TextField
+              fullWidth
+              size="small"
+              select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+            >
+              <MenuItem value="all">All Roles</MenuItem>
+              {isDeveloper && <MenuItem value="Developer">Developer</MenuItem>}
+              <MenuItem value="Super-Admin">Super Admin</MenuItem>
+              <MenuItem value="User">User</MenuItem>
+            </TextField>
+          </Stack>
+        </Grid>
+      </Grid>
       <Box sx={{ height: "62vh" }}>
         <DataGrid
           rows={users}

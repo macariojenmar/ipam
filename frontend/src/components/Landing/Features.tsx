@@ -79,8 +79,8 @@ export const Features = () => {
     <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "background.default" }}>
       <Container maxWidth="lg">
         <MotionBox
-          textAlign="center"
-          mb={8}
+          textAlign={{ xs: "left", sm: "center" }}
+          mb={{ xs: 4, md: 8 }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

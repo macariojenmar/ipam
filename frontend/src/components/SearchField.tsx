@@ -21,7 +21,7 @@ const SearchField = ({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      sx={{ minWidth: 300, ...sx }}
+      sx={{ width: { xs: "100%", md: 300 }, ...sx }}
       slotProps={{
         input: {
           startAdornment: (

@@ -34,6 +34,7 @@ export const Footer = () => {
             <Box>
               <Typography
                 variant="h4"
+                textAlign={{ xs: "center", md: "left" }}
                 sx={{ fontWeight: 800, color: "primary.main", mb: 1 }}
               >
                 IPlytics.io

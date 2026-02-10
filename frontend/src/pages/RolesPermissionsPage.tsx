@@ -7,6 +7,7 @@ import {
   Stack,
   alpha,
   useTheme,
+  Grid,
 } from "@mui/material";
 import {
   DataGrid,
@@ -199,19 +200,23 @@ const RolesPermissionsPage = () => {
         <Button
           variant="contained"
           startIcon={<Plus size={20} />}
+          fullWidth
           onClick={() => setCreateDialogOpen(true)}
+          sx={{ width: { xs: "100%", md: "auto" } }}
         >
           Add New Permission
         </Button>
       </PageLabel>
 
-      <Box sx={{ mb: 2 }}>
-        <SearchField
-          value={search}
-          onChange={setSearch}
-          placeholder="Search for permission name"
-        />
-      </Box>
+      <Grid container spacing={2} mb={2}>
+        <Grid size={{ xs: 12 }}>
+          <SearchField
+            value={search}
+            onChange={setSearch}
+            placeholder="Search for permission name"
+          />
+        </Grid>
+      </Grid>
 
       <Box sx={{ height: "62vh", width: "100%" }}>
         <DataGrid

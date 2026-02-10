@@ -64,13 +64,15 @@ const PermissionModal = ({
           />
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} variant="outlined">
+      <DialogActions sx={{ flexDirection: { xs: "column-reverse", sm: "row" }, gap: { xs: 1, sm: 0 }, p: 3 }}>
+        <Button onClick={handleClose} variant="outlined" fullWidth sx={{ width: { sm: "auto" } }}>
           Cancel
         </Button>
         <Button
           onClick={handleCreate}
           variant="contained"
+          fullWidth
+          sx={{ width: { sm: "auto" } }}
           disabled={
             !newPermissionName.trim() ||
             creating ||

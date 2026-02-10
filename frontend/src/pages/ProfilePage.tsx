@@ -19,89 +19,80 @@ const ProfilePage = () => {
 
   return (
     <MainLayout>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          flexGrow: 1,
-          minHeight: 0,
-        }}
-      >
-        <PageLabel title="Profile" subTitle="Manage your account settings" />
-        <Grid container sx={{ flexGrow: 1 }}>
-          <Grid size={{ xs: 12, md: 2 }} sx={{ display: "flex" }}>
-            <List disablePadding sx={{ p: 1 }}>
-              <ListItemButton
-                selected={activeTab === "profile"}
-                onClick={() => setActiveTab("profile")}
-                sx={{
-                  py: 1.2,
-                  borderRadius: "8px",
-                  mb: 0.5,
-                  "&.Mui-selected": {
-                    backgroundColor: "action.selected",
-                    "&:hover": {
-                      backgroundColor: "action.hover",
-                    },
-                  },
-                  "&:hover": {
-                    backgroundColor: "action.hover",
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
-                  <UserRound size={18} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Profile Information"
-                  slotProps={{ primary: { sx: { fontSize: "14px" } } }}
-                />
-              </ListItemButton>
-              <ListItemButton
-                selected={activeTab === "password"}
-                onClick={() => setActiveTab("password")}
-                sx={{
-                  py: 1.2,
-                  borderRadius: "8px",
-                  "&.Mui-selected": {
-                    backgroundColor: "action.selected",
-                    "&:hover": {
-                      backgroundColor: "action.hover",
-                    },
-                  },
-                  "&:hover": {
-                    backgroundColor: "action.hover",
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
-                  <Lock size={18} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Security"
-                  slotProps={{ primary: { sx: { fontSize: "14px" } } }}
-                />
-              </ListItemButton>
-            </List>
-          </Grid>
-          <Grid size={{ xs: 12, md: 10 }}>
-            <Card
-              variant="outlined"
+      <PageLabel title="Profile" subTitle="Manage your account settings" />
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
+          <List disablePadding sx={{ p: 1, width: "100%" }}>
+            <ListItemButton
+              selected={activeTab === "profile"}
+              onClick={() => setActiveTab("profile")}
               sx={{
-                p: 4,
+                py: 1.2,
                 borderRadius: "8px",
-                width: "100%",
+                mb: 0.5,
+                "&.Mui-selected": {
+                  backgroundColor: "action.selected",
+                  "&:hover": {
+                    backgroundColor: "action.hover",
+                  },
+                },
+                "&:hover": {
+                  backgroundColor: "action.hover",
+                },
               }}
             >
-              {activeTab === "profile" ? (
-                <ProfilePersonalInfo />
-              ) : (
-                <ProfileSecurity />
-              )}
-            </Card>
-          </Grid>
+              <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
+                <UserRound size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Profile"
+                slotProps={{ primary: { sx: { fontSize: "14px" } } }}
+              />
+            </ListItemButton>
+            <ListItemButton
+              selected={activeTab === "password"}
+              onClick={() => setActiveTab("password")}
+              sx={{
+                py: 1.2,
+                borderRadius: "8px",
+                "&.Mui-selected": {
+                  backgroundColor: "action.selected",
+                  "&:hover": {
+                    backgroundColor: "action.hover",
+                  },
+                },
+                "&:hover": {
+                  backgroundColor: "action.hover",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40, color: "text.primary" }}>
+                <Lock size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Security"
+                slotProps={{ primary: { sx: { fontSize: "14px" } } }}
+              />
+            </ListItemButton>
+          </List>
         </Grid>
-      </Box>
+        <Grid size={{ xs: 12, md: 10 }}>
+          <Card
+            variant="outlined"
+            sx={{
+              p: { xs: 2, sm: 4 },
+              borderRadius: "8px",
+              width: "100%",
+            }}
+          >
+            {activeTab === "profile" ? (
+              <ProfilePersonalInfo />
+            ) : (
+              <ProfileSecurity />
+            )}
+          </Card>
+        </Grid>
+      </Grid>
     </MainLayout>
   );
 };

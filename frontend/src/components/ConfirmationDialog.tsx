@@ -6,7 +6,6 @@ import {
   DialogContentText,
   DialogTitle,
   CircularProgress,
-  Divider,
 } from "@mui/material";
 
 interface ConfirmationDialogProps {
@@ -43,8 +42,8 @@ const ConfirmationDialog = ({
         </DialogContentText>
         {children}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} disabled={loading} variant="outlined">
+      <DialogActions sx={{ flexDirection: { xs: "column-reverse", sm: "row" }, gap: { xs: 1, sm: 0 }, p: 3 }}>
+        <Button onClick={onClose} disabled={loading} variant="outlined" fullWidth={true} sx={{ width: { sm: "auto" } }}>
           {cancelText}
         </Button>
         <Button
@@ -53,6 +52,8 @@ const ConfirmationDialog = ({
           disabled={loading}
           variant="contained"
           color={color}
+          fullWidth={true}
+          sx={{ width: { sm: "auto" } }}
           startIcon={
             loading ? <CircularProgress size={20} color="inherit" /> : null
           }

@@ -60,7 +60,7 @@ const LoginPage = () => {
         <Card
           variant="outlined"
           sx={{
-            p: 4,
+            p: { xs: 2, sm: 4 },
             borderRadius: 6,
           }}
         >

@@ -99,8 +99,9 @@ const ProfilePersonalInfo = () => {
         <Button
           type="submit"
           variant="contained"
+          fullWidth
           disabled={formik.isSubmitting || !formik.isValid || !formik.dirty}
-          sx={{ mt: 3 }}
+          sx={{ mt: 3, width: { sm: "auto" } }}
           startIcon={
             formik.isSubmitting ? (
               <CircularProgress size={20} color="inherit" />

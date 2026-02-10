@@ -73,14 +73,18 @@ export const Navbar = () => {
         <Stack
           direction={"row"}
           alignItems={"center"}
-          sx={{ flexGrow: 1 }}
+          sx={{ flexGrow: 1, minWidth: 120 }}
           gap={1}
         >
           <Earth size={22} strokeWidth={2.2} />
           <Typography
             onClick={() => navigate("/")}
             variant="h6"
-            sx={{ fontWeight: "bold", cursor: "pointer" }}
+            sx={{
+              fontWeight: "bold",
+              cursor: "pointer",
+              fontSize: { xs: "1rem", sm: "1.25rem" },
+            }}
           >
             IPlytics.io
           </Typography>
@@ -152,6 +156,8 @@ export const Navbar = () => {
                   color="inherit"
                   component={RouterLink}
                   to="/signup"
+                  size="small"
+                  sx={{ display: { xs: "none", sm: "inline-flex" } }}
                 >
                   Sign Up
                 </Button>
@@ -160,6 +166,7 @@ export const Navbar = () => {
                   sx={{ mr: 1 }}
                   component={RouterLink}
                   to="/login"
+                  size="small"
                 >
                   Login
                 </Button>

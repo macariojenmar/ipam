@@ -10,6 +10,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Grid,
 } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { type ApiErrorResponse } from "../services/api";
@@ -272,6 +273,7 @@ const IpManagementPage = () => {
           <Button
             variant="contained"
             startIcon={<Plus size={22} />}
+            fullWidth
             onClick={() =>
               setIpModal({
                 open: true,
@@ -286,38 +288,34 @@ const IpManagementPage = () => {
         </Stack>
       </PageLabel>
 
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        mb={2}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <SearchField
-          placeholder="Search for IP, label, or author"
-          value={search}
-          onChange={(val) => {
-            setSearch(val);
-            setPaginationModel((prev) => ({ ...prev, page: 0 }));
-          }}
-        />
-        <TextField
-          size="small"
-          select
-          value={typeFilter}
-          onChange={(e) => {
-            setTypeFilter(e.target.value);
-            setPaginationModel((prev) => ({ ...prev, page: 0 }));
-          }}
-          sx={{
-            minWidth: 120,
-          }}
-        >
-          <MenuItem value="all"> All Types </MenuItem>
-          <MenuItem value="IPv4">IPv4</MenuItem>
-          <MenuItem value="IPv6">IPv6</MenuItem>
-        </TextField>
-      </Stack>
+      <Grid container spacing={2} mb={2} justifyContent={"space-between"}>
+        <Grid size={{ xs: 12, md: 9 }}>
+          <SearchField
+            placeholder="Search for IP, label, or author"
+            value={search}
+            onChange={(val) => {
+              setSearch(val);
+              setPaginationModel((prev) => ({ ...prev, page: 0 }));
+            }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, md: 2 }}>
+          <TextField
+            fullWidth
+            size="small"
+            select
+            value={typeFilter}
+            onChange={(e) => {
+              setTypeFilter(e.target.value);
+              setPaginationModel((prev) => ({ ...prev, page: 0 }));
+            }}
+          >
+            <MenuItem value="all"> All Types </MenuItem>
+            <MenuItem value="IPv4">IPv4</MenuItem>
+            <MenuItem value="IPv6">IPv6</MenuItem>
+          </TextField>
+        </Grid>
+      </Grid>
       <Box sx={{ height: "62vh" }}>
         <DataGrid
           rows={ips}

@@ -8,11 +8,12 @@ import {
   Chip,
   TextField,
   MenuItem,
-  IconButton,
   Tooltip,
   Card,
   Divider,
   TablePagination,
+  Grid,
+  Button,
 } from "@mui/material";
 import { useAuditLogs, useAuditEvents } from "../hooks/useAuditLogs";
 import SearchField from "./SearchField";
@@ -82,7 +83,12 @@ const AuditLogsSection = () => {
 
   return (
     <Card variant="outlined" sx={{ padding: 4 }}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        alignItems={{ xs: "flex-start", sm: "center" }}
+        justifyContent="space-between"
+        gap={2}
+      >
         <Stack>
           <Typography variant="h6" fontWeight="700">
             Recent Activity
@@ -104,58 +110,80 @@ const AuditLogsSection = () => {
         />
       </Stack>
       <Divider sx={{ my: 2 }} />
-      <Stack gap={1} direction={"row"} mb={2} alignItems={"center"}>
-        <SearchField
-          placeholder="Search logs or users"
-          value={search}
-          onChange={(val) => {
-            setSearch(val);
-            setPage(0);
-          }}
-        />
-        <TextField
-          fullWidth
-          select
-          size="small"
-          value={eventType}
-          onChange={(e) => {
-            setEventType(e.target.value);
-            setPage(0);
-          }}
-        >
-          <MenuItem value="all">All Events</MenuItem>
-          {events?.map((e) => (
-            <MenuItem key={e.value} value={e.value}>
-              {e.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <DatePicker
-          label="Start Date"
-          value={startDate}
-          onChange={(newValue) => {
-            setStartDate(newValue);
-            setPage(0);
-          }}
-          format="MMM DD, YYYY"
-        />
-        <DatePicker
-          label="End Date"
-          value={endDate}
-          onChange={(newValue) => {
-            setEndDate(newValue);
-            setPage(0);
-          }}
-          format="MMM DD, YYYY"
-        />
+      <Grid container spacing={2} mb={2}>
+        <Grid size={{ xs: 12, md: 4, lg: 5 }}>
+          <SearchField
+            placeholder="Search logs or users"
+            value={search}
+            onChange={(val) => {
+              setSearch(val);
+              setPage(0);
+            }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3.5 }}>
+          <TextField
+            fullWidth
+            select
+            size="small"
+            value={eventType}
+            onChange={(e) => {
+              setEventType(e.target.value);
+              setPage(0);
+            }}
+          >
+            <MenuItem value="all">All Events</MenuItem>
+            {events?.map((e) => (
+              <MenuItem key={e.value} value={e.value}>
+                {e.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2, lg: 1.5 }}>
+          <DatePicker
+            slotProps={{ textField: { fullWidth: true, size: "small" } }}
+            label="Start Date"
+            value={startDate}
+            onChange={(newValue) => {
+              setStartDate(newValue);
+              setPage(0);
+            }}
+            format="MMM DD, YYYY"
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2, lg: 1.5 }}>
+          <DatePicker
+            slotProps={{ textField: { fullWidth: true, size: "small" } }}
+            label="End Date"
+            value={endDate}
+            onChange={(newValue) => {
+              setEndDate(newValue);
+              setPage(0);
+            }}
+            format="MMM DD, YYYY"
+          />
+        </Grid>
         {(search || eventType !== "all" || startDate || endDate) && (
-          <Tooltip title="Clear Filters">
-            <IconButton onClick={handleClearFilters} size="small">
-              <Trash2 size={18} />
-            </IconButton>
-          </Tooltip>
+          <Grid size={{ xs: 12, sm: "auto" }}>
+            <Tooltip title="Clear Filters">
+              <Button
+                fullWidth
+                variant="outlined"
+                color="error"
+                onClick={handleClearFilters}
+                startIcon={<Trash2 size={18} />}
+                sx={{
+                  height: { xs: "50px", sm: "40px" },
+                  textTransform: "none",
+                }}
+              >
+                Clear Filters
+              </Button>
+            </Tooltip>
+          </Grid>
         )}
-      </Stack>
+      </Grid>
 
       <Stack spacing={2}>
         {isLoadingLogs ? (
@@ -187,11 +215,16 @@ const AuditLogsSection = () => {
                 onClick={() => handleOpenDetail(log)}
               >
                 <Stack
-                  direction={"row"}
+                  direction={{ xs: "column", sm: "row" }}
                   justifyContent={"space-between"}
-                  alignItems={"center"}
+                  alignItems={{ xs: "flex-start", sm: "center" }}
+                  gap={{ xs: 2, md: 0 }}
                 >
-                  <Stack direction={"row"} alignItems={"center"} gap={2}>
+                  <Stack
+                    direction={{ xs: "column", sm: "row" }}
+                    alignItems={{ xs: "flex-start", sm: "center" }}
+                    gap={2}
+                  >
                     <Box
                       sx={{
                         p: 1,

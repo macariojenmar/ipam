@@ -105,7 +105,7 @@ const DashboardStats = () => {
   return (
     <Grid container spacing={2}>
       {statsConfig.map((stat, index) => (
-        <Grid key={`stat-key-${index}`} size={{ xs: 4 }}>
+        <Grid key={`stat-key-${index}`} size={{ xs: 12, sm: 6, lg: 4 }}>
           <StatCard
             key={stat.title}
             title={stat.title}

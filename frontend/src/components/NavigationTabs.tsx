@@ -62,7 +62,7 @@ export const NavigationTabs = () => {
     <Box
       sx={{
         position: "sticky",
-        top: 64,
+        top: { xs: 56, sm: 64 },
         zIndex: theme.zIndex.appBar - 1,
         backgroundColor: alpha(theme.palette.background.default, 0.8),
         backdropFilter: "blur(10px)",

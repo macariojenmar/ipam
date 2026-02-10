@@ -11,7 +11,7 @@ export const Hero = () => {
     <Box
       sx={{
         pt: { xs: 8, md: 15 },
-        pb: { xs: 8, md: 12 },
+        pb: { xs: 0, md: 12 },
         background: (theme) =>
           theme.palette.mode === DARK
             ? "linear-gradient(180deg, rgba(97, 95, 255, 0.05) 0%, rgba(97, 95, 255, 0) 100%)"
@@ -63,13 +63,19 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
+            width={{ xs: "100%", sm: "auto" }}
           >
             <Button
               component={RouterLink}
               to="/login"
               variant="contained"
               size="large"
-              sx={{ py: 1.5, px: 4, fontSize: "1rem" }}
+              sx={{
+                py: 1.5,
+                px: 4,
+                fontSize: "1rem",
+                width: { xs: "100%", sm: "auto" },
+              }}
             >
               Get Started
             </Button>
@@ -78,7 +84,12 @@ export const Hero = () => {
               to="/signup"
               variant="outlined"
               size="large"
-              sx={{ py: 1.5, px: 4, fontSize: "1rem" }}
+              sx={{
+                py: 1.5,
+                px: 4,
+                fontSize: "1rem",
+                width: { xs: "100%", sm: "auto" },
+              }}
             >
               Create Account
             </Button>
