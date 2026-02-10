@@ -1,5 +1,11 @@
 import { Tabs, Tab, Box, useTheme, alpha } from "@mui/material";
-import { LayoutDashboard, Network, Users, ShieldCheck } from "lucide-react";
+import {
+  LayoutDashboard,
+  Network,
+  Users,
+  ShieldCheck,
+  User,
+} from "lucide-react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { PageList } from "../enums/pageEnums";
 import { GLOBAL_X_MARGIN } from "../enums/themeEnums";
@@ -9,6 +15,7 @@ import {
   CAN_VIEW_IP_MANAGEMENT,
   CAN_VIEW_USERS,
   CAN_VIEW_ROLES_AND_PERMISSIONS,
+  CAN_VIEW_PROFILE,
 } from "../enums/permissionEnums";
 
 export const NavigationTabs = () => {
@@ -43,6 +50,12 @@ export const NavigationTabs = () => {
       path: PageList.ROLES_AND_PERMISSIONS,
       requiredPermission: CAN_VIEW_ROLES_AND_PERMISSIONS,
     },
+    {
+      label: "Profile",
+      icon: <User size={16} />,
+      path: PageList.PROFILE,
+      requiredPermission: CAN_VIEW_PROFILE,
+    },
   ];
 
   return (
@@ -73,6 +86,9 @@ export const NavigationTabs = () => {
           "& .MuiTabs-indicator": {
             height: 2,
             borderRadius: "2px 2px 0 0",
+          },
+          "& .MuiTab-root:hover": {
+            backgroundColor: "action.hover",
           },
         }}
       >
